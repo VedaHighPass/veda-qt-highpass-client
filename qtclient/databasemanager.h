@@ -16,16 +16,6 @@ public:
 
     void fetchData(const QString &url);
 
-signals:
-    void dataReady(const QList<QList<QVariant>> &data);
-
-private slots:
-    void handleNetworkReply(QNetworkReply *reply);
-
-private:
-    QNetworkAccessManager *networkManager;
-    QList<QVariant> extractRowData(const QJsonObject &obj);
-
     enum GateType {
         GATE_SEOUL_ENTRY = 1,
         GATE_SEOUL_EXIT = 2,
@@ -36,6 +26,18 @@ private:
         GATE_BUSAN_ENTRY = 7,
         GATE_BUSAN_EXIT = 8
     };
+
+
+signals:
+    void dataReady(const QList<QList<QVariant>> &data);
+
+private slots:
+    void handleNetworkReply(QNetworkReply *reply);
+
+private:
+    QNetworkAccessManager *networkManager;
+    QList<QVariant> extractRowData(const QJsonObject &obj);
+
 
     QMap<int, QString> gateMap = {
         {GATE_SEOUL_ENTRY, "서울"},

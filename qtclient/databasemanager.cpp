@@ -13,8 +13,9 @@ DatabaseManager::DatabaseManager(QObject *parent)
 DatabaseManager::~DatabaseManager() {}
 
 void DatabaseManager::fetchData(const QString &url) {
-    QUrl qUrl(url);
-    QNetworkRequest request(qUrl);
+    QNetworkRequest request;
+    request.setUrl(QUrl(url)); // URL 설정
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     networkManager->get(request); // GET 요청
 }
 
@@ -95,6 +96,7 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
 }
 
 QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
+
     QList<QVariant> row(DataList::COL_COUNT, QVariant()); // 열 개수만큼 초기화
 
     // 열 상수에 따라 데이터 추가
@@ -107,29 +109,38 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     row[DataList::COL_PAYMENT] = obj.contains("Payment") ? obj["Payment"].toInt() : 0;
     row[DataList::COL_PLATENUM] = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
 
-    row[DataList::COL_START_LOCATION] = obj.contains("GateNumber") ? gateMap.value(obj["GateNumber"].toInt(), "Unknown") : "Unknown";
+    // GateNumber -> GateName 변환
+    int entryGateNum = obj.contains("EntryGateNumber") ? obj["EntryGateNumber"].toInt() : -1;
+    int exitGateNum = obj.contains("ExitGateNumber") ? obj["ExitGateNumber"].toInt() : -1;
 
-    //row[DataList::COL_START_DATE] = obj.contains("EntryTime") ? obj["EntryTime"].toString() : "N/A";
-    if (obj.contains("EntryTime")) {
-        QString entryTimeStr = obj["EntryTime"].toString();
-        if (entryTimeStr.contains('.')) {
-            entryTimeStr = entryTimeStr.section('.', 0, 0); // . 이전까지만 가져오기
-        }
+    row[DataList::COL_START_LOCATION] = entryGateNum >= 0 ? gateMap.value(entryGateNum, "Unknown Entry Gate") : "-";
+    row[DataList::COL_END_LOCATION] = exitGateNum >= 0 ? gateMap.value(exitGateNum, "-") : "-";
 
-        QDateTime entryTime = QDateTime::fromString(entryTimeStr, "yyyy_MM_dd_HH:mm:ss");
-        // 유효한 시간일 경우 변환, 그렇지 않으면 기본값 설정
-        row[DataList::COL_START_DATE] = entryTime.isValid()
-                                            ? entryTime.toString("yyyy-MM-dd HH:mm")
-                                            : "Invalid Date";
-    } else {
-        row[DataList::COL_START_DATE] = "N/A"; // EntryTime이 없는 경우
+    // EntryTime 처리
+    QString entryTimeStr = obj.value("EntryTime").toString();
+    if (entryTimeStr.contains('.')) {
+        entryTimeStr = entryTimeStr.section('.', 0, 0); // . 이전까지만 가져오기
     }
+    QDateTime entryTime = QDateTime::fromString(entryTimeStr, "yyyy-MM-dd HH:mm:ss");
+    row[DataList::COL_START_DATE] = entryTime.isValid()
+                                        ? entryTime.toString("yyyy-MM-dd HH:mm")
+                                        : "-";
 
-    row[DataList::COL_END_LOCATION] = obj.contains("EndLocation") ? obj["EndLocation"].toString() : "N/A";
-    row[DataList::COL_END_DATE] = obj.contains("EndDate") ? obj["EndDate"].toString() : "N/A";
+    // ExitTime 처리 (NULL 시 "-")
+    QString exitTimeStr = obj.value("ExitTime").toString("-");
+    if (exitTimeStr.contains('.')) {
+        exitTimeStr = exitTimeStr.section('.', 0, 0); // . 이전까지만 가져오기
+    }
+    QDateTime exitTime = QDateTime::fromString(exitTimeStr, "yyyy-MM-dd HH:mm:ss");
+    row[DataList::COL_END_DATE] = exitTime.isValid()
+                                      ? exitTime.toString("yyyy-MM-dd HH:mm")
+                                      : "-";
 
-    row[DataList::COL_BILL_DATE] = obj.contains("BillDate") ? obj["BillDate"].toString() : "N/A";
+    // 기타 데이터
+    row[DataList::COL_BILL_DATE] = obj.contains("BillDate") ? obj["BillDate"].toString("-") : "-";
     row[DataList::COL_UNPAIDFEE] = obj.contains("UnpaidFee") ? obj["UnpaidFee"].toInt() : 0;
 
     return row;
+
+
 }

@@ -131,7 +131,7 @@
      <string>미등록차량신고</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_2">
+   <widget class="QRadioButton" name="entry_ALL">
     <property name="geometry">
      <rect>
       <x>70</x>
@@ -144,7 +144,7 @@
      <string>전체</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_3">
+   <widget class="QRadioButton" name="entry_SEOUL">
     <property name="geometry">
      <rect>
       <x>140</x>
@@ -157,7 +157,7 @@
      <string>서울</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_4">
+   <widget class="QRadioButton" name="exit_ALL">
     <property name="geometry">
      <rect>
       <x>70</x>
@@ -170,7 +170,7 @@
      <string>전체</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_5">
+   <widget class="QRadioButton" name="exit_SEOUL">
     <property name="geometry">
      <rect>
       <x>140</x>
@@ -196,7 +196,7 @@
      <string>미납차량만 보기</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_6">
+   <widget class="QRadioButton" name="entry_BUSAN">
     <property name="geometry">
      <rect>
       <x>210</x>
@@ -209,7 +209,7 @@
      <string>부산</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_7">
+   <widget class="QRadioButton" name="entry_DAEJUN">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -222,7 +222,7 @@
      <string>대전</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_8">
+   <widget class="QRadioButton" name="exit_BUSAN">
     <property name="geometry">
      <rect>
       <x>210</x>
@@ -235,7 +235,7 @@
      <string>부산</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_9">
+   <widget class="QRadioButton" name="exit_DAEJUN">
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -248,7 +248,7 @@
      <string>대전</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_10">
+   <widget class="QRadioButton" name="entry_DAEGU">
     <property name="geometry">
      <rect>
       <x>350</x>
@@ -261,7 +261,7 @@
      <string>대구</string>
     </property>
    </widget>
-   <widget class="QRadioButton" name="radioButton_11">
+   <widget class="QRadioButton" name="exit_DAEGU">
     <property name="geometry">
      <rect>
       <x>350</x>
@@ -272,32 +272,6 @@
     </property>
     <property name="text">
      <string>대구</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioButton_12">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>90</y>
-      <width>61</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>울산</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="radioButton_13">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>130</y>
-      <width>61</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>울산</string>
     </property>
    </widget>
    <widget class="QTableView" name="tableView">
@@ -337,6 +311,9 @@ QHeaderView::section:horizontal
 */</string>
     </property>
     <property name="alternatingRowColors">
+     <bool>true</bool>
+    </property>
+    <property name="sortingEnabled">
      <bool>true</bool>
     </property>
     <attribute name="horizontalHeaderCascadingSectionResizes">
@@ -394,12 +371,12 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>0</hour>
+      <hour>15</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
       <month>11</month>
-      <day>15</day>
+      <day>14</day>
      </datetime>
     </property>
     <property name="calendarPopup">
@@ -417,12 +394,12 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>0</hour>
+      <hour>15</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
       <month>11</month>
-      <day>25</day>
+      <day>24</day>
      </datetime>
     </property>
     <property name="calendarPopup">
