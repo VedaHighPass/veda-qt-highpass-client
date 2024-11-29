@@ -33,18 +33,9 @@ public:
         COL_COUNT // 총 열개수
     };
 
-    void addFilterCondition(const FilterCondition &condition);
-    void applyFilters();
-    void clearFilterConditions();
-
-public slots:
-    void filterData(int column, const QString &searchText);
-    void filterByDate(const QDate &startDate, const QDate &endDate);
-
 private:
     QTableView *tableView;
     QStandardItemModel *gridmodel;
-    QVector<FilterCondition> filterConditions;
 };
 
 #endif // DATALIST_H

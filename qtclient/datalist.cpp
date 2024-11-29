@@ -59,8 +59,6 @@ void DataList::GridTableView() {
     tableView->setItemDelegateForColumn(0, f_checkboxdelegate);
 }
 
-
-
 void DataList::populateData(const QList<QList<QVariant>> &data) {
     gridmodel->setRowCount(0); // 기존 데이터 초기화
     for (const QList<QVariant> &row : data) {
@@ -72,49 +70,3 @@ void DataList::populateData(const QList<QList<QVariant>> &data) {
     }
 }
 
-void DataList::filterData(int column, const QString &searchText) {
-    for (int row = 0; row < gridmodel->rowCount(); ++row){
-        QStandardItem *item = gridmodel->item(row, column);
-        if (item){
-            bool matches = item->text().contains(searchText, Qt::CaseInsensitive);
-            tableView -> setRowHidden(row, !matches);
-        }
-    }
-}
-
-void DataList::filterByDate(const QDate &startDate, const QDate &endDate){
-    for (int row = 0; row < gridmodel->rowCount(); ++row) {
-        QStandardItem *item = gridmodel->item(row, DataList::COL_START_DATE);
-        if (item) {
-            QString entryTimeStr = item->text();
-            qDebug() << entryTimeStr;
-
-            QString dateOnlyStr = entryTimeStr.left(10); // "yyyy_MM_dd" 추출
-            QDate entryTime = QDate::fromString(dateOnlyStr, "yyyy-MM-dd");
-            qDebug() << entryTime;
-            bool matches = entryTime >= startDate && entryTime <= endDate;
-            tableView->setRowHidden(row, !matches);
-        }
-    }
-}
-
-void DataList::addFilterCondition(const FilterCondition &condition){
-    filterConditions.append(condition);
-}
-
-void DataList::applyFilters(){
-    for (int row = 0; row < gridmodel->rowCount(); ++row){
-        bool matches = true;
-        for (const auto &condition : filterConditions){
-            if (!condition(row)){
-                matches = false;
-                break;
-            }
-        }
-        tableView->setRowHidden(row, !matches);
-    }
-}
-
-void DataList::clearFilterConditions(){
-    filterConditions.clear();
-}

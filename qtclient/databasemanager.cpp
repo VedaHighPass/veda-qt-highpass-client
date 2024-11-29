@@ -39,19 +39,6 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
     QJsonArray jsonArray = jsonDoc.array();
     QList<QList<QVariant>> data;
 
-    /*
-    // 키-열 매핑 정의
-    QMap<QString, int> columnMapping = {
-        {"BillID", 0},
-        {"EnterGateID", 1},
-        {"EnterGateRecordID", 2},
-        {"ExitGateID", 3},
-        {"ExitGateRecordID", 4},
-        {"HasPaid", 5},
-        {"PayDate", 6},
-        {"PlateNumber", 7},
-        {"Price", 8}
-    };*/
 
     // JSON 배열의 각 객체 처리
     for (const QJsonValue &value : jsonArray) {
@@ -63,34 +50,8 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
         QJsonObject obj = value.toObject();
         data.append(extractRowData(obj));
 
-        /*
-        // 키-열 매핑에 따라 값 추가
-        for (auto it = columnMapping.begin(); it != columnMapping.end(); ++it) {
-            QString key = it.key();
-            int col = it.value();
-
-
-            if (obj.contains(key)) {
-                QJsonValue jsonValue = obj[key];
-
-                qDebug() << jsonValue << " " << '\n';
-
-                // 타입에 따라 값 변환
-                if (jsonValue.isBool()) {
-                    row[col] = jsonValue.toBool();
-                } else if (jsonValue.isDouble()) {
-                    row[col] = jsonValue.toDouble();
-                } else if (jsonValue.isString()) {
-                    row[col] = jsonValue.toString();
-                } else if (jsonValue.isNull()) {
-                    row[col] = QVariant(); // Null 처리
-                } else {
-                    row[col] = QVariant("Unsupported"); // 미지원 타입 처리
-                }
-            }
-        }
-        */
     }
+    qDebug() << data;
 
     emit dataReady(data); // 데이터 준비 완료 신호
 }
@@ -141,6 +102,4 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     row[DataList::COL_UNPAIDFEE] = obj.contains("UnpaidFee") ? obj["UnpaidFee"].toInt() : 0;
 
     return row;
-
-
 }

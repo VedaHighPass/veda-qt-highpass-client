@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QUrlQuery>
 #include <QButtonGroup>
+#include <QLayoutItem>
 
 highPassWindow::highPassWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -93,42 +94,79 @@ void highPassWindow::on_search_Button_clicked()
     QString baseUrl = "http://127.0.0.1:8080/records";
     QUrl url(baseUrl);
 
-    QUrlQuery queryParams;
-    queryParams.addQueryItem("startDate", startDate.toString("yyyy-MM-dd"));
-    queryParams.addQueryItem("endDate", endDate.toString("yyyy-MM-dd"));
+    currentQueryParams = QUrlQuery(); // 기존 쿼리 초기화
+    currentQueryParams.addQueryItem("startDate", startDate.toString("yyyy-MM-dd"));
+    currentQueryParams.addQueryItem("endDate", endDate.toString("yyyy-MM-dd"));
 
-    // 검색 텍스트가 비어 있지 않을 때만 추가
+    // 검색 텍스트 추가
     if (!searchText.isEmpty()) {
-        queryParams.addQueryItem("plateNumber", searchText);
+        currentQueryParams.addQueryItem("plateNumber", searchText);
     }
 
-    // 출발지 필터링 조건 추가
+    // 출발지 조건 추가
     QStringList entryLocations;
-    if (!ui->entry_ALL->isChecked()) { // 전체 선택이 아닐 때만 조건 추가
+    if (!ui->entry_ALL->isChecked()) {
         if (ui->entry_SEOUL->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_SEOUL_ENTRY);
         if (ui->entry_DAEGU->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_DAEGU_ENTRY);
         if (ui->entry_DAEJUN->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_DAEJUN_ENTRY);
         if (ui->entry_BUSAN->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_BUSAN_ENTRY);
     }
     if (!entryLocations.isEmpty()) {
-        queryParams.addQueryItem("entryGate", entryLocations.join(","));
+        currentQueryParams.addQueryItem("entryGate", entryLocations.join(","));
     }
 
-    // 도착지 필터링 조건 추가
+    // 도착지 조건 추가
     QStringList exitLocations;
-    if (!ui->exit_ALL->isChecked()) { // 전체 선택이 아닐 때만 조건 추가
+    if (!ui->exit_ALL->isChecked()) {
         if (ui->exit_SEOUL->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_SEOUL_EXIT);
         if (ui->exit_DAEGU->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_DAEGU_EXIT);
         if (ui->exit_DAEJUN->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_DAEJUN_EXIT);
         if (ui->exit_BUSAN->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_BUSAN_EXIT);
     }
     if (!exitLocations.isEmpty()) {
-        queryParams.addQueryItem("exitGate", exitLocations.join(","));
+        currentQueryParams.addQueryItem("exitGate", exitLocations.join(","));
     }
 
-    url.setQuery(queryParams);
-    qDebug() << queryParams.toString();
+    // 페이지 관련 정보 초기화
+    currentPage = 1;
+    currentQueryParams.addQueryItem("pageSize", QString::number(pageSize));
+    currentQueryParams.addQueryItem("page", QString::number(currentPage));
 
+    // URL 갱신
+    url.setQuery(currentQueryParams);
+    qDebug() << "Query URL:" << url.toString();
+
+    // 데이터 요청
     dbManager->fetchData(url.toString());
 }
 
+void highPassWindow::updatePageButtons(int totalPages, int selectedPage) {
+    // 기존 버튼 제거
+    QLayoutItem *child;
+    while ((child = ui->pageLayout->takeAt(0)) != nullptr) {
+        delete child->widget();
+        delete child;
+    }
+
+    // 새로운 버튼 추가
+    for (int i = 1; i <= totalPages; ++i) {
+        QPushButton *pageButton = new QPushButton(QString::number(i), this);
+        pageButton->setCheckable(true);
+        if (i == selectedPage) {
+            pageButton->setChecked(true);
+        }
+        ui->pageLayout->addWidget(pageButton);
+
+        connect(pageButton, &QPushButton::clicked, this, [this, i]() {
+            // 페이지 정보 갱신
+            currentPage = i;
+            currentQueryParams.removeQueryItem("page");
+            currentQueryParams.addQueryItem("page", QString::number(currentPage));
+
+            QUrl url("http://127.0.0.1:8080/records");
+            url.setQuery(currentQueryParams);
+
+            dbManager->fetchData(url.toString());
+        });
+    }
+}
