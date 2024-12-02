@@ -65,7 +65,6 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
 
     // PlateNumber 가져오기
     QString plateNumber = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
-
     // 이미지 경로 생성
     QString entryImagePath = QString("http://127.0.0.1:8080/images/%1/entry.jpg").arg(plateNumber);
     QString exitImagePath = QString("http://127.0.0.1:8080/images/%1/exit.jpg").arg(plateNumber);
@@ -74,9 +73,10 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     row[DataList::COL_CHECKBOX] = QVariant(); // CheckBox는 비워둠
 
     // JSON 키 매핑 및 기본값 처리
-    row[DataList::COL_PHOTO] = entryImagePath;
+    row[DataList::COL_PHOTO_ENTRY] = entryImagePath;
+    row[DataList::COL_PHOTO_EXIT] = exitImagePath;
+
     row[DataList::COL_REGISTRATION] = obj.contains("Registration") ? obj["Registration"].toInt() : 0;
-    row[DataList::COL_BILL] = obj.contains("Bill") ? obj["Bill"].toInt() : 0;
     row[DataList::COL_PAYMENT] = obj.contains("Payment") ? obj["Payment"].toInt() : 0;
     row[DataList::COL_PLATENUM] = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
 

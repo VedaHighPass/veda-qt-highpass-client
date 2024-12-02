@@ -18,10 +18,8 @@ public:
 
     enum Columns {
         COL_CHECKBOX,
-        COL_PHOTO,
-        COL_REGISTRATION,
-        COL_BILL,
-        COL_PAYMENT,
+        COL_PHOTO_ENTRY,
+        COL_PHOTO_EXIT,
         COL_PLATENUM,
         COL_START_LOCATION,
         COL_START_DATE,
@@ -29,6 +27,8 @@ public:
         COL_END_DATE,
         COL_BILL_DATE,
         COL_UNPAIDFEE,
+        COL_REGISTRATION,
+        COL_PAYMENT,
         COL_COUNT // 총 열개수
     };
 public slots :
