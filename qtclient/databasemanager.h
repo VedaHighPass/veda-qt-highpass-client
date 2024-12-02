@@ -30,6 +30,7 @@ public:
 
 signals:
     void dataReady(const QList<QList<QVariant>> &data);
+    void updatePageNavigation(int totalRecords);
 
 private slots:
     void handleNetworkReply(QNetworkReply *reply);

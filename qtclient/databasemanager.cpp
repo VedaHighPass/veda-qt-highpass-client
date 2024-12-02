@@ -31,16 +31,19 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
 
     // JSON 문서를 파싱
     QJsonDocument jsonDoc = QJsonDocument::fromJson(responseData);
-    if (!jsonDoc.isArray()) {
-        qDebug() << "Invalid JSON format. Expected an array.";
+    if (!jsonDoc.isObject()) {
+        qDebug() << "Invalid JSON format. Expected an object.";
         return;
     }
 
-    QJsonArray jsonArray = jsonDoc.array();
+    QJsonObject jsonObj = jsonDoc.object();
+
+    // 총 레코드 수 가져오기
+    int totalRecords = jsonObj.value("totalRecords").toInt();
+
+    // 데이터 배열 파싱
+    QJsonArray jsonArray = jsonObj.value("data").toArray();
     QList<QList<QVariant>> data;
-
-
-    // JSON 배열의 각 객체 처리
     for (const QJsonValue &value : jsonArray) {
         if (!value.isObject()) {
             qDebug() << "Skipping non-object JSON value.";
@@ -49,11 +52,11 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
 
         QJsonObject obj = value.toObject();
         data.append(extractRowData(obj));
-
     }
-    qDebug() << data;
 
-    emit dataReady(data); // 데이터 준비 완료 신호
+    // 페이지 버튼 갱신
+    emit dataReady(data);
+    emit updatePageNavigation(totalRecords); // 총 레코드 수와 현재 페이지 전달
 }
 
 QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {

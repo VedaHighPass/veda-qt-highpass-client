@@ -16,6 +16,7 @@ highPassWindow::highPassWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // entrygate button set
     QButtonGroup *entrygroup = new QButtonGroup(this);
     entrygroup->addButton(ui->entry_ALL);
     entrygroup->addButton(ui->entry_SEOUL);
@@ -39,6 +40,7 @@ highPassWindow::highPassWindow(QWidget *parent)
         }
     });
 
+    // exitgate button set
     QButtonGroup *exitgroup = new QButtonGroup(this);
     exitgroup->addButton(ui->exit_ALL);
     exitgroup->addButton(ui->exit_SEOUL);
@@ -74,8 +76,7 @@ highPassWindow::highPassWindow(QWidget *parent)
     connect(dbManager, &DatabaseManager::dataReady, this, [this](const QList<QList<QVariant>> &data) {
        dataList->populateData(data);
     });
-
-    //dbManager->fetchData("http://192.168.1.15:8080/records"); // 데이터 요청
+    connect(dbManager, &DatabaseManager::updatePageNavigation, this, &highPassWindow::updatePageButtons);
 }
 
 highPassWindow::~highPassWindow() {
@@ -140,7 +141,9 @@ void highPassWindow::on_search_Button_clicked()
     dbManager->fetchData(url.toString());
 }
 
-void highPassWindow::updatePageButtons(int totalPages, int selectedPage) {
+void highPassWindow::updatePageButtons(int totalRecords) {
+    int totalPages = (totalRecords + pageSize - 1) / pageSize; // 총 페이지 수 계산
+
     // 기존 버튼 제거
     QLayoutItem *child;
     while ((child = ui->pageLayout->takeAt(0)) != nullptr) {
@@ -152,21 +155,23 @@ void highPassWindow::updatePageButtons(int totalPages, int selectedPage) {
     for (int i = 1; i <= totalPages; ++i) {
         QPushButton *pageButton = new QPushButton(QString::number(i), this);
         pageButton->setCheckable(true);
-        if (i == selectedPage) {
+        if (i == currentPage) {
             pageButton->setChecked(true);
         }
         ui->pageLayout->addWidget(pageButton);
 
+        // 버튼 클릭 시 데이터 요청
         connect(pageButton, &QPushButton::clicked, this, [this, i]() {
-            // 페이지 정보 갱신
-            currentPage = i;
-            currentQueryParams.removeQueryItem("page");
-            currentQueryParams.addQueryItem("page", QString::number(currentPage));
+            if (i != currentPage) { // 현재 페이지와 다른 버튼 클릭 시에만 요청
+                currentPage = i; // 현재 페이지 업데이트
+                currentQueryParams.removeQueryItem("page");
+                currentQueryParams.addQueryItem("page", QString::number(currentPage));
 
-            QUrl url("http://127.0.0.1:8080/records");
-            url.setQuery(currentQueryParams);
+                QUrl url("http://127.0.0.1:8080/records");
+                url.setQuery(currentQueryParams);
 
-            dbManager->fetchData(url.toString());
+                dbManager->fetchData(url.toString()); // 새 데이터 요청
+            }
         });
     }
 }

@@ -27,10 +27,10 @@ private:
     DatabaseManager *dbManager;
 
     int currentPage = 1; // 현재 페이지
-    int totalPages = 0;  // 총 페이지 수
+    int totalPages = 1;  // 총 페이지 수
     const int pageSize = 10; // 한 페이지당 항목 수
 
-    void updatePageButtons(int totalPages, int currentPage);
+    void updatePageButtons(int totalPages);
     QUrlQuery currentQueryParams;
 };
 
