@@ -5,8 +5,7 @@
 #include <QTableWidget>
 #include <QTableView>
 #include <QStandardItemModel>
-
-using FilterCondition = std::function<bool(int row)>;
+#include <QNetworkAccessManager>
 
 class DataList : public QWidget
 {
@@ -32,10 +31,13 @@ public:
         COL_UNPAIDFEE,
         COL_COUNT // 총 열개수
     };
+public slots :
+    void onImageDownloaded(); // 이미지 다운로드 슬롯
 
 private:
     QTableView *tableView;
     QStandardItemModel *gridmodel;
+    QNetworkAccessManager *networkManager;
 };
 
 #endif // DATALIST_H

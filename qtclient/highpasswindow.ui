@@ -371,12 +371,12 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>6</hour>
+      <hour>21</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
       <month>11</month>
-      <day>14</day>
+      <day>13</day>
      </datetime>
     </property>
     <property name="calendarPopup">
@@ -394,12 +394,12 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>6</hour>
+      <hour>21</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
       <month>11</month>
-      <day>24</day>
+      <day>23</day>
      </datetime>
     </property>
     <property name="calendarPopup">

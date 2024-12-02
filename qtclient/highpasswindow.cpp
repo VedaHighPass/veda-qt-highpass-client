@@ -155,8 +155,16 @@ void highPassWindow::updatePageButtons(int totalRecords) {
     for (int i = 1; i <= totalPages; ++i) {
         QPushButton *pageButton = new QPushButton(QString::number(i), this);
         pageButton->setCheckable(true);
+
+        // 버튼 크기 제한 설정
+        pageButton->setMaximumWidth(50);
+
+        // 현재 페이지 버튼 스타일 설정
         if (i == currentPage) {
+            pageButton->setStyleSheet("background-color: #4CAF50; color: white; border: 1px solid #4CAF50; border-radius: 4px;");
             pageButton->setChecked(true);
+        } else {
+            pageButton->setStyleSheet("background-color: white; color: black; border: 1px solid #ccc; border-radius: 4px;");
         }
         ui->pageLayout->addWidget(pageButton);
 
