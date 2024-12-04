@@ -8,7 +8,7 @@
 #include <QUrlQuery>
 #include <QButtonGroup>
 #include <QLayoutItem>
-#include "mailwidget.h"
+#include "sendemail.h"
 
 highPassWindow::highPassWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -187,12 +187,13 @@ void highPassWindow::updatePageButtons(int totalRecords) {
 
 void highPassWindow::on_mail_Button_clicked()
 {
-    MailWidget *mailWidget = new MailWidget(this); // 항상 새 객체 생성
-    //connect(mailWidget, &MailWidget::sendMail, this, &highPassWindow::handleSendMail);
+    SendEmail *mailWidget = new SendEmail(this); // 항상 새 객체 생성
+    mailWidget->setWindowFlags(Qt::Window); // 독립 창으로 설정
 
     mailWidget->setAttribute(Qt::WA_DeleteOnClose); // 창 닫힐 때 자동 삭제
     mailWidget->show();
     mailWidget->raise();
     mailWidget->activateWindow();
+
 }
 

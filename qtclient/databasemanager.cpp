@@ -117,7 +117,6 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     QString plateNumber = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
     // 이미지 경로 생성
     QString entryImagePath = QString("http://127.0.0.1:8080/images/%1/entry.jpg").arg(plateNumber);
-    //QString exitImagePath = QString("http://127.0.0.1:8080/images/%1/exit.jpg").arg(plateNumber);
 
     // 열 상수에 따라 데이터 추가
     row[DataList::COL_CHECKBOX] = QVariant(); // CheckBox는 비워둠
