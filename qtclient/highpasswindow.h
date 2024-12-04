@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QUrlQuery>
 
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class highPassWindow; }
 QT_END_NAMESPACE
@@ -20,6 +21,8 @@ public:
 
 private slots:
     void on_search_Button_clicked();
+
+    void on_mail_Button_clicked();
 
 private:
     Ui::highPassWindow *ui;

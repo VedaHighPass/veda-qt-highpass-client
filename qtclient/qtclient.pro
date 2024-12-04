@@ -13,6 +13,7 @@ SOURCES += \
     databasemanager.cpp \
     datalist.cpp \
     highpasswindow.cpp \
+    mailwidget.cpp \
     main.cpp \
     mainwindow.cpp \
     searchwidget.cpp
@@ -22,6 +23,7 @@ HEADERS += \
     databasemanager.h \
     datalist.h \
     highpasswindow.h \
+    mailwidget.h \
     mainwindow.h \
     searchwidget.h
 

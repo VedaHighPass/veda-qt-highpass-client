@@ -18,8 +18,8 @@ void DataList::GridTableView() {
 
     // 헤더 설정
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_CHECKBOX, new QStandardItem(QString(" ")));
-    gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PHOTO_ENTRY, new QStandardItem(QString("사진(출발)")));
-    gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PHOTO_EXIT, new QStandardItem(QString("사진(도착)")));
+    gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PHOTO, new QStandardItem(QString("사진")));
+    gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PATH, new QStandardItem(QString("경로")));
 
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PLATENUM, new QStandardItem(QString("번호판")));
 
@@ -69,7 +69,7 @@ void DataList::populateData(const QList<QList<QVariant>> &data) {
         QList<QStandardItem *> items;
 
         for (int i = 0; i < row.size(); ++i) {
-            if (i == DataList::COL_PHOTO_ENTRY || i == DataList::COL_PHOTO_EXIT) {
+            if (i == DataList::COL_PHOTO) {
                 // 이미지 열 처리
                 QString imageUrl = row[i].toString(); // 이미지 URL
                 QStandardItem* imageItem = new QStandardItem();

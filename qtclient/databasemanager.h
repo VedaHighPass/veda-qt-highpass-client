@@ -17,7 +17,7 @@ public:
     void fetchData(const QString &url);
 
     enum GateType {
-        GATE_SEOUL_ENTRY = 1,
+        /*GATE_SEOUL_ENTRY = 1,
         GATE_SEOUL_EXIT = 2,
         GATE_DAEJUN_ENTRY = 3,
         GATE_DAEJUN_EXIT = 4,
@@ -25,8 +25,14 @@ public:
         GATE_DAEGU_EXIT = 6,
         GATE_BUSAN_ENTRY = 7,
         GATE_BUSAN_EXIT = 8
+        */
+        GATE_SEOUL = 1,
+        GATE_DAEJUN = 2,
+        GATE_DAEGU = 3,
+        GATE_BUSAN = 4,
+        GATE_GWANGJU = 5
     };
-
+    int getGateFee(int gateNumber) const; // 특정 게이트 요금을 반환
 
 signals:
     void dataReady(const QList<QList<QVariant>> &data);
@@ -38,17 +44,18 @@ private slots:
 private:
     QNetworkAccessManager *networkManager;
     QList<QVariant> extractRowData(const QJsonObject &obj);
+    QMap<int, int> gateFeeMap; // http://127.0.0.1:8080/gatefees
+    QMap<QNetworkReply*, QString> requestMap; // 요청과 URL 매핑
 
+    void fetchGateFees(); // Gate 요금 요청 함수
+    void parseGateFees(const QByteArray &data); // Gate 요금을 파싱하여 저장
 
     QMap<int, QString> gateMap = {
-        {GATE_SEOUL_ENTRY, "서울"},
-        {GATE_SEOUL_EXIT, "서울"},
-        {GATE_DAEJUN_ENTRY, "대전"},
-        {GATE_DAEJUN_EXIT, "대전"},
-        {GATE_DAEGU_ENTRY, "대구"},
-        {GATE_DAEGU_EXIT, "대구"},
-        {GATE_BUSAN_ENTRY, "부산"},
-        {GATE_BUSAN_EXIT, "부산"},
+        {GATE_SEOUL, "서울"},
+        {GATE_DAEJUN, "대전"},
+        {GATE_DAEGU, "대구"},
+        {GATE_BUSAN, "부산"},
+        {GATE_GWANGJU, "광주"},
     };
 };
 

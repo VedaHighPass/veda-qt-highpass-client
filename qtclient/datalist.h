@@ -18,8 +18,8 @@ public:
 
     enum Columns {
         COL_CHECKBOX,
-        COL_PHOTO_ENTRY,
-        COL_PHOTO_EXIT,
+        COL_PHOTO,
+        COL_PATH,
         COL_PLATENUM,
         COL_START_LOCATION,
         COL_START_DATE,

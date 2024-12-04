@@ -105,7 +105,7 @@
      <string>도착날짜</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="mail_Button">
     <property name="geometry">
      <rect>
       <x>670</x>
@@ -115,7 +115,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>알림발송</string>
+     <string>메일발송</string>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_4">
@@ -371,7 +371,7 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>21</hour>
+      <hour>12</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
@@ -394,7 +394,7 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>21</hour>
+      <hour>12</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>

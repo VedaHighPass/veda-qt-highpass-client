@@ -8,6 +8,7 @@
 #include <QUrlQuery>
 #include <QButtonGroup>
 #include <QLayoutItem>
+#include "mailwidget.h"
 
 highPassWindow::highPassWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -107,10 +108,10 @@ void highPassWindow::on_search_Button_clicked()
     // 출발지 조건 추가
     QStringList entryLocations;
     if (!ui->entry_ALL->isChecked()) {
-        if (ui->entry_SEOUL->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_SEOUL_ENTRY);
-        if (ui->entry_DAEGU->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_DAEGU_ENTRY);
-        if (ui->entry_DAEJUN->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_DAEJUN_ENTRY);
-        if (ui->entry_BUSAN->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_BUSAN_ENTRY);
+        if (ui->entry_SEOUL->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_SEOUL);
+        if (ui->entry_DAEGU->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_DAEGU);
+        if (ui->entry_DAEJUN->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_DAEJUN);
+        if (ui->entry_BUSAN->isChecked()) entryLocations << QString::number(DatabaseManager::GATE_BUSAN);
     }
     if (!entryLocations.isEmpty()) {
         currentQueryParams.addQueryItem("entryGate", entryLocations.join(","));
@@ -119,10 +120,10 @@ void highPassWindow::on_search_Button_clicked()
     // 도착지 조건 추가
     QStringList exitLocations;
     if (!ui->exit_ALL->isChecked()) {
-        if (ui->exit_SEOUL->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_SEOUL_EXIT);
-        if (ui->exit_DAEGU->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_DAEGU_EXIT);
-        if (ui->exit_DAEJUN->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_DAEJUN_EXIT);
-        if (ui->exit_BUSAN->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_BUSAN_EXIT);
+        if (ui->exit_SEOUL->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_SEOUL);
+        if (ui->exit_DAEGU->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_DAEGU);
+        if (ui->exit_DAEJUN->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_DAEJUN);
+        if (ui->exit_BUSAN->isChecked()) exitLocations << QString::number(DatabaseManager::GATE_BUSAN);
     }
     if (!exitLocations.isEmpty()) {
         currentQueryParams.addQueryItem("exitGate", exitLocations.join(","));
@@ -183,3 +184,15 @@ void highPassWindow::updatePageButtons(int totalRecords) {
         });
     }
 }
+
+void highPassWindow::on_mail_Button_clicked()
+{
+    MailWidget *mailWidget = new MailWidget(this); // 항상 새 객체 생성
+    //connect(mailWidget, &MailWidget::sendMail, this, &highPassWindow::handleSendMail);
+
+    mailWidget->setAttribute(Qt::WA_DeleteOnClose); // 창 닫힐 때 자동 삭제
+    mailWidget->show();
+    mailWidget->raise();
+    mailWidget->activateWindow();
+}
+
