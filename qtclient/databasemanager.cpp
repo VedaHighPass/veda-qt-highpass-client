@@ -4,6 +4,7 @@
 #include <QJsonObject>
 #include <QDebug>
 #include "datalist.h"
+#include <QLocale>
 
 DatabaseManager::DatabaseManager(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this)) {
@@ -78,28 +79,39 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
 }
 
 QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
-
     QList<QVariant> row(DataList::COL_COUNT, QVariant()); // 열 개수만큼 초기화
 
-    // Path 처리
+    /// Path 처리
+    int totalFee = 0; // 총 요금 초기화
     if (obj.contains("Path")) {
         QString pathString = obj["Path"].toString(); // Path 값을 가져옴
         QStringList gateNumbers = pathString.split(",", Qt::SkipEmptyParts); // Path를 콤마로 분리
-        QStringList gateNames;
 
+        // 각 게이트 번호의 요금을 합산
         for (const QString &gateNumberStr : gateNumbers) {
             bool ok;
             int gateNumber = gateNumberStr.toInt(&ok); // 숫자로 변환
+            if (ok && gateFeeMap.contains(gateNumber)) {
+                totalFee += gateFeeMap[gateNumber]; // 요금 추가
+            }
+        }
+
+        // 경로를 -> 형식으로 변환
+        QStringList gateNames;
+        for (const QString &gateNumberStr : gateNumbers) {
+            bool ok;
+            int gateNumber = gateNumberStr.toInt(&ok);
             if (ok && gateMap.contains(gateNumber)) {
                 gateNames.append(gateMap[gateNumber]); // Gate 이름으로 매핑
             }
         }
-
-        // Gate 이름들을 '-'로 연결
         row[DataList::COL_PATH] = gateNames.join("->");
     } else {
-        row[DataList::COL_PATH] = "Unknown"; // Path 데이터가 없을 경우 기본값 설정
+        row[DataList::COL_PATH] = "-";
     }
+
+    // UnpaidFee에 총 요금 추가
+    row[DataList::COL_UNPAIDFEE] = QLocale(QLocale::English).toString(totalFee)  + "\\";
 
     // PlateNumber 가져오기
     QString plateNumber = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
@@ -146,9 +158,6 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
 
     // 기타 데이터
     row[DataList::COL_BILL_DATE] = obj.contains("BillDate") ? obj["BillDate"].toString("-") : "-";
-    row[DataList::COL_UNPAIDFEE] = obj.contains("UnpaidFee")
-                                       ? QString::number(obj["UnpaidFee"].toInt()) + "\\"
-                                       : "0\\";
 
     return row;
 }
