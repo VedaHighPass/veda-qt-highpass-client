@@ -9,6 +9,10 @@
 #include <QButtonGroup>
 #include <QLayoutItem>
 #include "sendemail.h"
+#include <QGraphicsDropShadowEffect>
+
+
+QGraphicsDropShadowEffect* createShadowEffect(int r, int x, int y, int alpha);
 
 highPassWindow::highPassWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,6 +20,24 @@ highPassWindow::highPassWindow(QWidget *parent)
     , dataList(nullptr) // 초기화
 {
     ui->setupUi(this);
+
+    ui->search_Line->setPlaceholderText("Search...");
+    ui->tableView->setFocusPolicy(Qt::NoFocus);
+
+
+    // shadow effect
+    QList<QWidget*> widgets = {
+        ui->top_background,
+        ui->mid_background,
+        ui->Bill_Button,
+        ui->mail_Button,
+        ui->register_Button,
+        ui->tableView
+    };
+
+    for (QWidget* widget : widgets) {
+        widget->setGraphicsEffect(createShadowEffect(50,1,1,50));
+    }
 
     // entrygate button set
     QButtonGroup *entrygroup = new QButtonGroup(this);
@@ -187,6 +209,7 @@ void highPassWindow::updatePageButtons(int totalRecords) {
 
 void highPassWindow::on_mail_Button_clicked()
 {
+    dataList->getCheckedClients();
     SendEmail *mailWidget = new SendEmail(this); // 항상 새 객체 생성
     mailWidget->setWindowFlags(Qt::Window); // 독립 창으로 설정
 
@@ -197,3 +220,10 @@ void highPassWindow::on_mail_Button_clicked()
 
 }
 
+QGraphicsDropShadowEffect* createShadowEffect(int r, int x, int y, int alpha) {
+    QGraphicsDropShadowEffect* shadowEffect = new QGraphicsDropShadowEffect();
+    shadowEffect->setBlurRadius(r);  // 그림자 블러 정도
+    shadowEffect->setOffset(x, y);    // 그림자 위치
+    shadowEffect->setColor(QColor(0, 0, 0, alpha)); // 투명도 포함 색상
+    return shadowEffect;
+}

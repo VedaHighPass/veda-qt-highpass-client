@@ -31,6 +31,7 @@ public:
         COL_PAYMENT,
         COL_COUNT // 총 열개수
     };
+    QList<QPair<QString, QString>> getCheckedClients() const;
 public slots :
     void onImageDownloaded(); // 이미지 다운로드 슬롯
 
