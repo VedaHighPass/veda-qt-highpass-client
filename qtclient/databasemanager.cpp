@@ -7,7 +7,7 @@
 #include <QLocale>
 
 DatabaseManager::DatabaseManager(QObject *parent)
-    : QObject(parent), networkManager(new QNetworkAccessManager(this)) {
+    : QObject(parent), networkManager(new QNetworkAccessManager(this)), serverUrl("http://127.0.0.1:8080/") {
     connect(networkManager, &QNetworkAccessManager::finished, this, &DatabaseManager::handleNetworkReply);
 
     // Gate 요금 데이터 초기화
@@ -15,6 +15,15 @@ DatabaseManager::DatabaseManager(QObject *parent)
 }
 
 DatabaseManager::~DatabaseManager() {}
+
+void DatabaseManager::setServerUrl(const QString &ipAddress) {
+    if (ipAddress.isEmpty()) {
+        serverUrl.clear(); // IP 입력이 없으면 URL 초기화
+    } else {
+        serverUrl = QString("http://%1:8080/").arg(ipAddress.trimmed());
+    }
+    qDebug() << "Updated server URL:" << serverUrl;
+}
 
 void DatabaseManager::fetchData(const QString &url) {
     QNetworkRequest request;

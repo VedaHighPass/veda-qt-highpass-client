@@ -100,6 +100,8 @@ highPassWindow::highPassWindow(QWidget *parent)
        dataList->populateData(data);
     });
     connect(dbManager, &DatabaseManager::updatePageNavigation, this, &highPassWindow::updatePageButtons);
+    ui->db_address_Line->setText("127.0.0.1");
+    connect(ui->db_address_Line, &QLineEdit::textChanged, dbManager, &DatabaseManager::setServerUrl);
 }
 
 highPassWindow::~highPassWindow() {
@@ -174,6 +176,31 @@ void highPassWindow::updatePageButtons(int totalRecords) {
         delete child;
     }
 
+    QString buttonStyle = R"(
+        QPushButton {
+            border-radius: 5px;
+            background-color: rgb(255, 255, 255);
+            width: 50px;
+            height: 40px;
+            color: rgb(35, 76, 159);
+            border: 1px solid #ccc;
+        }
+        QPushButton:pressed {
+            border: 1px solid #333333;
+            background-color: #222222;
+            color: white;
+        }
+        QPushButton:hover {
+            background-color: rgb(35, 76, 159);
+            color: white;
+        }
+        QPushButton:checked {
+            background-color: rgb(35, 76, 159);
+            color: white;
+            border: 1px solid rgb(35, 76, 159);
+        }
+    )";
+
     // 새로운 버튼 추가
     for (int i = 1; i <= totalPages; ++i) {
         QPushButton *pageButton = new QPushButton(QString::number(i), this);
@@ -181,14 +208,13 @@ void highPassWindow::updatePageButtons(int totalRecords) {
 
         // 버튼 크기 제한 설정
         pageButton->setMaximumWidth(50);
+        pageButton->setStyleSheet(buttonStyle);
 
         // 현재 페이지 버튼 스타일 설정
         if (i == currentPage) {
-            pageButton->setStyleSheet("background-color: #4CAF50; color: white; border: 1px solid #4CAF50; border-radius: 4px;");
-            pageButton->setChecked(true);
-        } else {
-            pageButton->setStyleSheet("background-color: white; color: black; border: 1px solid #ccc; border-radius: 4px;");
+            pageButton->setChecked(true); // 현재 페이지는 선택된 상태
         }
+
         ui->pageLayout->addWidget(pageButton);
 
         // 버튼 클릭 시 데이터 요청

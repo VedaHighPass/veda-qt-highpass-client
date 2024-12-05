@@ -16,7 +16,7 @@ void CheckBoxDelegate::paint( QPainter *painter,
 {
     QVariant value = index.data(Qt::CheckStateRole); // Qt::CheckStateRole 사용
     if (!value.isValid()) {
-        return; // 데이터가 없으면 아무것도 렌더링하지 않음
+        return;
     }
 
     QRect rect = QRect(option.rect.center().x() - 8,  // 체크박스 X 위치
@@ -40,10 +40,6 @@ void CheckBoxDelegate::paint( QPainter *painter,
         painter->drawLine(rect.topLeft() + QPoint(4, 8), rect.center() + QPoint(0, 4)); // 첫 번째 선
         painter->drawLine(rect.center() + QPoint(0, 4), rect.bottomRight() - QPoint(2, 10)); // 두 번째 선
     }
-
-    // 기본 체크박스 내부 그리기
-    //QApplication::style()->drawControl(QStyle::CE_CheckBox, &cbo, painter);
-
     painter->restore();
 }
 
@@ -52,17 +48,12 @@ bool CheckBoxDelegate::editorEvent( QEvent *event,
                                    const QStyleOptionViewItem &option,
                                    const QModelIndex &index )
 {
-    qDebug() << "Editor event called for row:" << index.row() << "col:" << index.column();
-    qDebug() << "Event type:" << event->type(); // 이벤트 타입 확인
     Q_UNUSED(option);
 
     if (event->type() == QEvent::MouseButtonRelease || event->type() == QEvent::MouseButtonDblClick) {
-        qDebug() << "Mouse event detected. Current CheckState:" << index.data(Qt::CheckStateRole);
         QVariant value = index.data(Qt::CheckStateRole);
         Qt::CheckState state = (value == Qt::Checked) ? Qt::Unchecked : Qt::Checked;
-        qDebug() << "Setting CheckState to:" << state;
         bool success = model->setData(index, state, Qt::CheckStateRole); // 모델 업데이트
-        qDebug() << "Model setData success:" << success;
         return true;
     }
     return false;

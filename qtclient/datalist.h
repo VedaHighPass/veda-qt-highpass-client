@@ -39,6 +39,7 @@ private:
     QTableView *tableView;
     QStandardItemModel *gridmodel;
     QNetworkAccessManager *networkManager;
+    void updateRowColors();
 };
 
 #endif // DATALIST_H

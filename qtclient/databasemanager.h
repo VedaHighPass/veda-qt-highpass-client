@@ -38,6 +38,8 @@ signals:
     void dataReady(const QList<QList<QVariant>> &data);
     void updatePageNavigation(int totalRecords);
 
+public slots:
+    void setServerUrl(const QString &ipAddress);
 private slots:
     void handleNetworkReply(QNetworkReply *reply);
 
@@ -57,6 +59,7 @@ private:
         {GATE_BUSAN, "부산"},
         {GATE_GWANGJU, "광주"},
     };
+    QString serverUrl;
 };
 
 #endif // DATABASEMANAGER_H

@@ -20,10 +20,6 @@ void DataList::GridTableView() {
     gridmodel = new QStandardItemModel(15, 10, tableView); // 15행 10열 설정
     tableView->setModel(gridmodel);
 
-
-
-
-
     // 헤더 설정
     // gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_CHECKBOX, new QStandardItem(QString(" ")));
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PHOTO, new QStandardItem(QString("Photo")));
@@ -60,8 +56,6 @@ void DataList::GridTableView() {
         tableView->viewport()->update();
     });
 
-
-
     // 데이터 초기화 및 셀 크기 설정
     for (int row = 0; row < 15; row++) {
         QModelIndex index = gridmodel->index(row, DataList::Columns::COL_CHECKBOX);
@@ -92,6 +86,16 @@ void DataList::GridTableView() {
     // CheckBoxDelegate 설정
     CheckBoxDelegate *f_checkboxdelegate = new CheckBoxDelegate(tableView);
     tableView->setItemDelegateForColumn(0, f_checkboxdelegate);
+
+    connect(gridmodel, &QStandardItemModel::itemChanged, this, [this](QStandardItem *item) {
+        if (item->column() == DataList::Columns::COL_CHECKBOX) {
+            updateRowColors();
+        }
+    });
+    connect(tableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, [this]() {
+        updateRowColors();
+    });
+
 }
 
 void DataList::populateData(const QList<QList<QVariant>> &data) {
@@ -101,7 +105,13 @@ void DataList::populateData(const QList<QList<QVariant>> &data) {
         QList<QStandardItem *> items;
 
         for (int i = 0; i < row.size(); ++i) {
-            if (i == DataList::COL_PHOTO) {
+            if (i == DataList::COL_CHECKBOX) {
+                // 체크박스 초기화
+                QStandardItem *checkBoxItem = new QStandardItem();
+                checkBoxItem->setFlags(Qt::ItemIsUserCheckable | Qt::ItemIsEnabled); // 체크 가능 및 활성화
+                checkBoxItem->setCheckState(Qt::Unchecked); // 초기 상태를 Unchecked로 설정
+                items.append(checkBoxItem);
+            } else if (i == DataList::COL_PHOTO) {
                 // 이미지 열 처리
                 QString imageUrl = row[i].toString(); // 이미지 URL
                 QStandardItem* imageItem = new QStandardItem();
@@ -128,6 +138,8 @@ void DataList::populateData(const QList<QList<QVariant>> &data) {
     for (int row = 0; row < gridmodel->rowCount(); ++row) {
         tableView->setRowHeight(row, 120);
     }
+    // 데이터 갱신 후 체크박스와 배경색 업데이트
+    updateRowColors();
 }
 
 void DataList::onImageDownloaded() {
@@ -188,3 +200,30 @@ QList<QPair<QString, QString>> DataList::getCheckedClients() const {
     return checkedClients;
 }
 
+void DataList::updateRowColors() {
+    QItemSelectionModel* selectionModel = tableView->selectionModel();
+
+    for (int row = 0; row < gridmodel->rowCount(); ++row) {
+        QStandardItem *checkBoxItem = gridmodel->item(row, DataList::Columns::COL_CHECKBOX);
+        bool isSelected = selectionModel->isRowSelected(row, QModelIndex());
+
+        QColor bgColor;
+
+        if (checkBoxItem && checkBoxItem->checkState() == Qt::Checked) {
+            bgColor = QColor(QColor("lightblue")); // 체크박스가 선택된 행 색상
+        } else if (isSelected) {
+            bgColor = QColor("#ffd966"); // 선택된 경우 다른 색상
+        } else {
+            bgColor = (row % 2 == 0 ? QColor("#f5f5f5") : QColor("white")); // 교차 배경 유지
+        }
+
+        // 열의 배경색 설정
+        for (int col = 0; col < DataList::Columns::COL_COUNT; ++col) {
+            QModelIndex index = gridmodel->index(row, col);
+            gridmodel->setData(index, bgColor, Qt::BackgroundRole);
+        }
+    }
+
+    // 테이블 뷰 강제 갱신
+    tableView->viewport()->update();
+}
