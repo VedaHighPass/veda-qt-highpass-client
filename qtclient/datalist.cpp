@@ -6,6 +6,10 @@
 #include <QMetaType>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QCheckBox>
+#include <QHeaderView>
+#include <QStandardItemModel>
+#include <QHBoxLayout>
 
 DataList::DataList(QTableView *tableView, QObject *parent)
     : tableView(tableView), gridmodel(nullptr), networkManager(new QNetworkAccessManager(this)) {
@@ -16,8 +20,12 @@ void DataList::GridTableView() {
     gridmodel = new QStandardItemModel(15, 10, tableView); // 15행 10열 설정
     tableView->setModel(gridmodel);
 
+
+
+
+
     // 헤더 설정
-    gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_CHECKBOX, new QStandardItem(QString(" ")));
+    // gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_CHECKBOX, new QStandardItem(QString(" ")));
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PHOTO, new QStandardItem(QString("Photo")));
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PATH, new QStandardItem(QString("Path")));
 
@@ -33,25 +41,34 @@ void DataList::GridTableView() {
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_REGISTRATION, new QStandardItem(QString("Reg")));
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PAYMENT, new QStandardItem(QString("Paid")));
 
+
+    QCheckBox* headerCheckbox = new QCheckBox(tableView);
+    headerCheckbox->setText(""); // 텍스트 비우기
+    headerCheckbox->setTristate(false); // 세 상태 비활성화
+    headerCheckbox->setGeometry(tableView->horizontalHeader()->sectionViewportPosition(DataList::Columns::COL_CHECKBOX) + 12,
+                                7, 20, 20); // 위치 및 크기 설정
+    headerCheckbox->show();
+
+    connect(headerCheckbox, &QCheckBox::stateChanged, this, [this, headerCheckbox](int state) {
+        Qt::CheckState newState = static_cast<Qt::CheckState>(state);
+        for (int row = 0; row < gridmodel->rowCount(); ++row) {
+            QModelIndex index = gridmodel->index(row, DataList::Columns::COL_CHECKBOX);
+            gridmodel->setData(index, newState, Qt::CheckStateRole);
+            qDebug() << "Row" << row << "State set to:" << newState;
+        }
+        // 테이블 뷰 강제 갱신
+        tableView->viewport()->update();
+    });
+
+
+
     // 데이터 초기화 및 셀 크기 설정
     for (int row = 0; row < 15; row++) {
-        QStandardItem *checkBoxItem = new QStandardItem();
-        checkBoxItem->setCheckable(true); // 체크박스 활성화
-        checkBoxItem->setCheckState(Qt::Unchecked); // 초기 상태 설정
-        // 가운데 정렬
-        checkBoxItem->setTextAlignment(Qt::AlignCenter);
-
-        // 아이콘 크기 조정 (스타일 힌트로 체크박스 크기를 조절)
-        QFont font = checkBoxItem->font();
-        font.setPointSize(12); // 체크박스의 크기를 조정할 때 폰트 크기도 키움
-        checkBoxItem->setFont(font);
-
-        gridmodel->setItem(row, DataList::COL_CHECKBOX, checkBoxItem);
-
+        QModelIndex index = gridmodel->index(row, DataList::Columns::COL_CHECKBOX);
+        gridmodel->setData(index, Qt::Unchecked, Qt::CheckStateRole); // 체크 상태만 설정
         for (int col = 1; col < DataList::Columns::COL_COUNT; col++) {
             index = gridmodel->index(row, col, QModelIndex());
             gridmodel->setData(index, "");
-            tableView->setColumnWidth(col, 150);
         }
         tableView->setRowHeight(row, 120);
     }
@@ -59,6 +76,7 @@ void DataList::GridTableView() {
     // 열 너비 조정
     tableView->setColumnWidth(DataList::Columns::COL_CHECKBOX, 40); // 체크박스 열 너비 설정
     tableView->setColumnWidth(DataList::Columns::COL_PHOTO, 170);
+    tableView->setColumnWidth(DataList::Columns::COL_PATH, 150);
     tableView->setColumnWidth(DataList::Columns::COL_PLATENUM, 80);
     tableView->setColumnWidth(DataList::Columns::COL_START_LOCATION, 50);
     tableView->setColumnWidth(DataList::Columns::COL_END_LOCATION, 50);
@@ -72,8 +90,8 @@ void DataList::GridTableView() {
     tableView->setColumnWidth(DataList::Columns::COL_PAYMENT,40);
 
     // CheckBoxDelegate 설정
-    //CheckBoxDelegate *f_checkboxdelegate = new CheckBoxDelegate(tableView);
-    //tableView->setItemDelegateForColumn(0, f_checkboxdelegate);
+    CheckBoxDelegate *f_checkboxdelegate = new CheckBoxDelegate(tableView);
+    tableView->setItemDelegateForColumn(0, f_checkboxdelegate);
 }
 
 void DataList::populateData(const QList<QList<QVariant>> &data) {

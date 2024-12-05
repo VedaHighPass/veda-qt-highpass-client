@@ -24,6 +24,25 @@
 
 QWidget {
     background-color: none; /* 다른 위젯의 상속된 배경색 초기화 */
+}
+
+QCheckBox::indicator {
+    border: 1px solid black; /* 경계선 색상 */
+    background-color: white; /* 배경 색상 */
+    width: 16px; /* 체크박스 크기 */
+    height: 16px;
+}
+
+QCheckBox::indicator:checked {
+    background-color: lightblue; /* 체크된 상태 배경색 */
+	border: 1px solid black; /* 경계선 유지 */
+	image: url(:/images/images/check.png);
+
+}
+
+QCheckBox::indicator:unchecked {
+    background-color: white; /* 체크 해제 상태 배경색 */
+	border: 1px solid black; /* 경계선 유지 */
 }</string>
    </property>
    <widget class="QPushButton" name="search_Button">
@@ -450,6 +469,7 @@ QHeaderView::section {
     border-bottom: 1px solid #fffff8;
     border-right: 1px solid #fffff8;
 }
+
 QTableView::item:selected {
     background-color: transparent; /* 선택된 셀의 배경색 투명 */
 }
