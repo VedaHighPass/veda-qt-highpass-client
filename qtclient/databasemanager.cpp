@@ -5,24 +5,28 @@
 #include <QDebug>
 #include "datalist.h"
 #include <QLocale>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QEventLoop>
+#include <QTimer>
 
 DatabaseManager::DatabaseManager(QObject *parent)
-    : QObject(parent), networkManager(new QNetworkAccessManager(this)), serverUrl("http://127.0.0.1:8080/") {
-    connect(networkManager, &QNetworkAccessManager::finished, this, &DatabaseManager::handleNetworkReply);
-
-    // Gate 요금 데이터 초기화
-    fetchGateFees();
+    : QObject(parent), networkManager(new QNetworkAccessManager(this)) {
+    //connect(networkManager, &QNetworkAccessManager::finished, this, &DatabaseManager::handleNetworkReply);
 }
 
 DatabaseManager::~DatabaseManager() {}
 
-void DatabaseManager::setServerUrl(const QString &ipAddress) {
+bool DatabaseManager::setServerUrl(const QString &ipAddress) {
     if (ipAddress.isEmpty()) {
-        serverUrl.clear(); // IP 입력이 없으면 URL 초기화
-    } else {
-        serverUrl = QString("http://%1:8080/").arg(ipAddress.trimmed());
+        qDebug() << "Empty IP address.";
+        return false;
     }
+
+    serverUrl = QString("http://%1:8080/").arg(ipAddress.trimmed());
     qDebug() << "Updated server URL:" << serverUrl;
+
+    return true;
 }
 
 void DatabaseManager::fetchData(const QString &url) {
@@ -32,10 +36,21 @@ void DatabaseManager::fetchData(const QString &url) {
     //networkManager->get(request); // GET 요청
     QNetworkReply* reply = networkManager->get(request); // GET 요청
     requestMap[reply] = url; // 요청과 URL 매핑
+    qDebug() << "fetch Data";
 }
 
 void DatabaseManager::fetchGateFees() {
-    fetchData("http://127.0.0.1:8080/gatefees"); // Gate 요금 요청
+    QString url = serverUrl + "gatefees";
+    QUrl qUrl(url);
+
+    if (!qUrl.isValid()) {  // URL 유효성 검사
+        qDebug() << "Invalid URL:" << qUrl;
+        return;
+    }
+    QNetworkRequest request(qUrl);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    networkManager->get(request);
+    connect(networkManager, &QNetworkAccessManager::finished, this, &DatabaseManager::handleNetworkReply);
 }
 
 int DatabaseManager::getGateFee(int gateNumber) const {
@@ -50,11 +65,15 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
     }
 
     QByteArray responseData = reply->readAll();
-    QString url = requestMap.take(reply); // 요청에 대응되는 URL 가져오기
+    //QString url = requestMap.take(reply); // 요청에 대응되는 URL 가져오기
+    QUrl requestUrl = reply->request().url();  // 요청 URL 확인
     reply->deleteLater();
 
-    if (url == "http://127.0.0.1:8080/gatefees") {
-        parseGateFees(responseData); // Gate 요금 파싱
+    reply->deleteLater();
+
+    // URL에 따라 처리 분기
+    if (requestUrl.toString().contains("gatefees")) {
+        parseGateFees(responseData);  // Gate 요금 데이터 파싱
     } else { // JSON 문서를 파싱
 
         QJsonDocument jsonDoc = QJsonDocument::fromJson(responseData);
@@ -125,7 +144,7 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     // PlateNumber 가져오기
     QString plateNumber = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
     // 이미지 경로 생성
-    QString entryImagePath = QString("http://127.0.0.1:8080/images/%1/entry.jpg").arg(plateNumber);
+    QString entryImagePath = QString("%1images/%2/entry.jpg").arg(serverUrl).arg(plateNumber);
 
     // 열 상수에 따라 데이터 추가
     row[DataList::COL_CHECKBOX] = QVariant(); // CheckBox는 비워둠
@@ -186,4 +205,8 @@ void DatabaseManager::parseGateFees(const QByteArray &data) {
         gateFeeMap[gateNumber] = gateFee;
     }
     qDebug() << "Gate fees loaded:" << gateFeeMap;
+}
+
+QString DatabaseManager::getServerUrl() const {
+    return serverUrl;
 }

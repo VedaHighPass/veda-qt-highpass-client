@@ -577,12 +577,12 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>3</hour>
+      <hour>18</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
       <month>11</month>
-      <day>13</day>
+      <day>12</day>
      </datetime>
     </property>
     <property name="calendarPopup">
@@ -662,12 +662,12 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>3</hour>
+      <hour>18</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
       <month>11</month>
-      <day>23</day>
+      <day>22</day>
      </datetime>
     </property>
     <property name="calendarPopup">
@@ -864,32 +864,36 @@ border-radius:10px;</string>
      <enum>Qt::Orientation::Vertical</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QPushButton" name="DB_Button">
     <property name="geometry">
      <rect>
-      <x>957</x>
-      <y>20</y>
-      <width>41</width>
-      <height>41</height>
+      <x>951</x>
+      <y>11</y>
+      <width>51</width>
+      <height>51</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
-    background: none;
-    background-image: url(:/resources/image.png);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain; /* 이미지를 버튼 크기에 맞춤 */
-}</string>
+    border: none; /* 테두리를 없애고 싶다면 */
+    background-color: transparent; /* 배경을 투명하게 설정 */
+    background-repeat: no-repeat; /* 반복 방지 */
+    background-position: center; /* 아이콘 위치를 중앙으로 */
+}
+</string>
     </property>
     <property name="text">
      <string/>
     </property>
-    <property name="pixmap">
-     <pixmap resource="resources.qrc">:/images/images/db.png</pixmap>
+    <property name="icon">
+     <iconset resource="resources.qrc">
+      <normaloff>:/images/images/db.png</normaloff>:/images/images/db.png</iconset>
     </property>
-    <property name="scaledContents">
-     <bool>true</bool>
+    <property name="iconSize">
+     <size>
+      <width>35</width>
+      <height>35</height>
+     </size>
     </property>
    </widget>
    <zorder>mid_background</zorder>
@@ -923,7 +927,7 @@ border-radius:10px;</string>
    <zorder>label</zorder>
    <zorder>db_address_Line</zorder>
    <zorder>line</zorder>
-   <zorder>label_5</zorder>
+   <zorder>DB_Button</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

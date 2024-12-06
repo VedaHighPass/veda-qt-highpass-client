@@ -33,13 +33,15 @@ public:
         GATE_GWANGJU = 5
     };
     int getGateFee(int gateNumber) const; // 특정 게이트 요금을 반환
+    void fetchGateFees();
+    QString getServerUrl() const;
 
 signals:
     void dataReady(const QList<QList<QVariant>> &data);
     void updatePageNavigation(int totalRecords);
 
 public slots:
-    void setServerUrl(const QString &ipAddress);
+    bool setServerUrl(const QString &ipAddress);
 private slots:
     void handleNetworkReply(QNetworkReply *reply);
 
@@ -49,7 +51,6 @@ private:
     QMap<int, int> gateFeeMap; // http://127.0.0.1:8080/gatefees
     QMap<QNetworkReply*, QString> requestMap; // 요청과 URL 매핑
 
-    void fetchGateFees(); // Gate 요금 요청 함수
     void parseGateFees(const QByteArray &data); // Gate 요금을 파싱하여 저장
 
     QMap<int, QString> gateMap = {
@@ -60,6 +61,8 @@ private:
         {GATE_GWANGJU, "광주"},
     };
     QString serverUrl;
+
+
 };
 
 #endif // DATABASEMANAGER_H

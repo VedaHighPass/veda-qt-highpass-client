@@ -23,11 +23,13 @@ private slots:
     void on_search_Button_clicked();
 
     void on_mail_Button_clicked();
+    void initializeDatabaseManager();
 
 private:
     Ui::highPassWindow *ui;
     DataList *dataList; // DataList 객체 선언
     DatabaseManager *dbManager;
+    bool validateIpAddress(const QString &ipAddress) const;
 
     int currentPage = 1; // 현재 페이지
     int totalPages = 1;  // 총 페이지 수

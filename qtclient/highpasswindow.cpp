@@ -10,7 +10,7 @@
 #include <QLayoutItem>
 #include "sendemail.h"
 #include <QGraphicsDropShadowEffect>
-
+#include <QMessageBox>
 
 QGraphicsDropShadowEffect* createShadowEffect(int r, int x, int y, int alpha);
 
@@ -18,12 +18,17 @@ highPassWindow::highPassWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::highPassWindow)
     , dataList(nullptr) // 초기화
+    , dbManager(nullptr)
 {
     ui->setupUi(this);
 
     ui->search_Line->setPlaceholderText("Search...");
     ui->tableView->setFocusPolicy(Qt::NoFocus);
 
+    // LineEdit에 IP 형식 입력 제한 설정
+    QRegularExpression ipRegex(R"((\d{1,3}\.){3}\d{1,3})"); // IPv4 형식
+    QRegularExpressionValidator *ipValidator = new QRegularExpressionValidator(ipRegex, this);
+    ui->db_address_Line->setValidator(ipValidator);
 
     // shadow effect
     QList<QWidget*> widgets = {
@@ -95,6 +100,9 @@ highPassWindow::highPassWindow(QWidget *parent)
     dataList = new DataList(ui->tableView, this);
     dataList->GridTableView();
 
+    // DB 버튼 클릭 시 연결
+    connect(ui->DB_Button, &QPushButton::clicked, this, &highPassWindow::initializeDatabaseManager);
+    /*
     dbManager = new DatabaseManager(this);
     connect(dbManager, &DatabaseManager::dataReady, this, [this](const QList<QList<QVariant>> &data) {
        dataList->populateData(data);
@@ -102,6 +110,7 @@ highPassWindow::highPassWindow(QWidget *parent)
     connect(dbManager, &DatabaseManager::updatePageNavigation, this, &highPassWindow::updatePageButtons);
     ui->db_address_Line->setText("127.0.0.1");
     connect(ui->db_address_Line, &QLineEdit::textChanged, dbManager, &DatabaseManager::setServerUrl);
+    */
 }
 
 highPassWindow::~highPassWindow() {
@@ -117,7 +126,7 @@ void highPassWindow::on_search_Button_clicked()
     QDate endDate = ui->date_End->date();
     QString searchText = ui->search_Line->text().trimmed();
 
-    QString baseUrl = "http://127.0.0.1:8080/records";
+    QString baseUrl = dbManager->getServerUrl() + "records";
     QUrl url(baseUrl);
 
     currentQueryParams = QUrlQuery(); // 기존 쿼리 초기화
@@ -224,7 +233,8 @@ void highPassWindow::updatePageButtons(int totalRecords) {
                 currentQueryParams.removeQueryItem("page");
                 currentQueryParams.addQueryItem("page", QString::number(currentPage));
 
-                QUrl url("http://127.0.0.1:8080/records");
+                QString baseUrl = dbManager->getServerUrl() + "records";
+                QUrl url(baseUrl);
                 url.setQuery(currentQueryParams);
 
                 dbManager->fetchData(url.toString()); // 새 데이터 요청
@@ -252,4 +262,64 @@ QGraphicsDropShadowEffect* createShadowEffect(int r, int x, int y, int alpha) {
     shadowEffect->setOffset(x, y);    // 그림자 위치
     shadowEffect->setColor(QColor(0, 0, 0, alpha)); // 투명도 포함 색상
     return shadowEffect;
+}
+
+void highPassWindow::initializeDatabaseManager()
+{
+    QString ipAddress = ui->db_address_Line->text().trimmed();
+
+    if (!validateIpAddress(ipAddress)) {
+        QMessageBox::warning(this, "Invalid IP", "Please enter a valid IP address in the format xxx.xxx.xxx.xxx.");
+        return;
+    }
+
+    if (dbManager) {
+        delete dbManager;
+    }
+    dbManager = new DatabaseManager(this);
+    dbManager->setServerUrl(ipAddress);
+
+    // fetchGateFees 호출
+    dbManager->fetchGateFees();
+
+    // 시그널 연결
+    connect(dbManager, &DatabaseManager::dataReady, this, [this](const QList<QList<QVariant>> &data) {
+        dataList->populateData(data);
+    });
+    connect(dbManager, &DatabaseManager::updatePageNavigation, this, &highPassWindow::updatePageButtons);
+
+    QMessageBox::information(this, "Database Connected", "Database connection initialized successfully.");
+
+    /*dbManager->fetchGateFees([this](bool success) {
+        if (success) {
+            connect(dbManager, &DatabaseManager::dataReady, this, [this](const QList<QList<QVariant>> &data) {
+                dataList->populateData(data);
+            });
+            connect(dbManager, &DatabaseManager::updatePageNavigation, this, &highPassWindow::updatePageButtons);
+
+            QMessageBox::information(this, "Database Connected", "Database connection initialized successfully.");
+        } else {
+            QMessageBox::warning(this, "Server Connecting Error", "Cannot connect to server. Please check the IP address and try again.");
+        }
+    });*/
+}
+
+bool highPassWindow::validateIpAddress(const QString &ipAddress) const
+{
+    QRegularExpression ipRegex(R"(^(\d{1,3}\.){3}\d{1,3}$)");
+    QRegularExpressionMatch match = ipRegex.match(ipAddress);
+
+    if (!match.hasMatch()) {
+        return false; // 형식이 맞지 않으면 유효하지 않음
+    }
+
+    QStringList octets = ipAddress.split('.');
+    for (const QString &octet : octets) {
+        bool ok;
+        int value = octet.toInt(&ok);
+        if (!ok || value < 0 || value > 255) {
+            return false; // 각 옥텟이 0~255 범위를 벗어나면 유효하지 않음
+        }
+    }
+    return true; // 모든 조건 만족 시 유효
 }
