@@ -21,7 +21,7 @@
 
 #define SENDER_NAME "heejin"
 #define SENDER_EMAIL "hejin5484@gmail.com"
-#define SENDER_PASSWORD "qnha vhgh qobk evqr"
+#define SENDER_PASSWORD "APP PW here"
 
 #define RECIPIENT_NAME "hjhj"
 #define RECIPIENT_EMAIL "3katie@naver.com"
