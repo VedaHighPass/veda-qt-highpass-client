@@ -577,7 +577,7 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>18</hour>
+      <hour>9</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
@@ -662,7 +662,7 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>18</hour>
+      <hour>9</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
@@ -845,13 +845,13 @@ border-radius:10px;</string>
      <string/>
     </property>
     <property name="text">
-     <string>127.0.0.1</string>
+     <string/>
     </property>
    </widget>
    <widget class="Line" name="line">
     <property name="geometry">
      <rect>
-      <x>640</x>
+      <x>650</x>
       <y>-10</y>
       <width>31</width>
       <height>91</height>
@@ -896,6 +896,34 @@ border-radius:10px;</string>
      </size>
     </property>
    </widget>
+   <widget class="QLabel" name="icon_Label">
+    <property name="geometry">
+     <rect>
+      <x>903</x>
+      <y>30</y>
+      <width>21</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background: none;
+    background-image: url(:/resources/image.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain; /* 이미지를 버튼 크기에 맞춤 */
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap resource="resources.qrc">:/images/images/red_icon.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
    <zorder>mid_background</zorder>
    <zorder>mid_background_2</zorder>
    <zorder>top_background</zorder>
@@ -928,6 +956,7 @@ border-radius:10px;</string>
    <zorder>db_address_Line</zorder>
    <zorder>line</zorder>
    <zorder>DB_Button</zorder>
+   <zorder>icon_Label</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

@@ -37,6 +37,7 @@ private:
 
     void updatePageButtons(int totalPages);
     QUrlQuery currentQueryParams;
+    void updateIcon();
 };
 
 #endif // HIGHPASSWINDOW_H

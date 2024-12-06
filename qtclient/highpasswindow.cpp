@@ -21,7 +21,7 @@ highPassWindow::highPassWindow(QWidget *parent)
     , dbManager(nullptr)
 {
     ui->setupUi(this);
-
+    updateIcon();
     ui->search_Line->setPlaceholderText("Search...");
     ui->tableView->setFocusPolicy(Qt::NoFocus);
 
@@ -122,6 +122,11 @@ highPassWindow::~highPassWindow() {
 
 void highPassWindow::on_search_Button_clicked()
 {
+    if (!dbManager){
+        qDebug() <<  QMessageBox::warning(this, "Server Connecting Error", "Cannot connect to server. Please set the server address first.");
+        return;
+    }
+
     QDate startDate = ui->date_Start->date();
     QDate endDate = ui->date_End->date();
     QString searchText = ui->search_Line->text().trimmed();
@@ -275,6 +280,7 @@ void highPassWindow::initializeDatabaseManager()
 
     if (dbManager) {
         delete dbManager;
+        dbManager = nullptr;
     }
     dbManager = new DatabaseManager(this);
     dbManager->setServerUrl(ipAddress);
@@ -289,6 +295,7 @@ void highPassWindow::initializeDatabaseManager()
     connect(dbManager, &DatabaseManager::updatePageNavigation, this, &highPassWindow::updatePageButtons);
 
     QMessageBox::information(this, "Database Connected", "Database connection initialized successfully.");
+    updateIcon();
 
     /*dbManager->fetchGateFees([this](bool success) {
         if (success) {
@@ -322,4 +329,12 @@ bool highPassWindow::validateIpAddress(const QString &ipAddress) const
         }
     }
     return true; // 모든 조건 만족 시 유효
+}
+
+void highPassWindow::updateIcon() {
+    if (dbManager) {
+        ui->icon_Label->setPixmap(QPixmap(":/images/images/green_icon.png"));
+    } else {
+        ui->icon_Label->setPixmap(QPixmap(":/images/images/red_icon.png"));
+    }
 }
