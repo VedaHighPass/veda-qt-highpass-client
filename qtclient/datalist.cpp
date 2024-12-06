@@ -180,9 +180,8 @@ void DataList::onImageDownloaded() {
 
     reply->deleteLater();
 }
-
-QList<QPair<QString, QString>> DataList::getCheckedClients() const {
-    QList<QPair<QString, QString>> checkedClients;
+QList<Client> DataList::getCheckedClients() const {
+    QList<Client> checkedClients;
 
     // 이메일 유효성 검사 정규식
     QRegularExpression emailRegex(R"((^[\w\.-]+@[\w\.-]+\.\w{2,}$))");
@@ -192,11 +191,16 @@ QList<QPair<QString, QString>> DataList::getCheckedClients() const {
         if (checkBoxItem && checkBoxItem->data(Qt::CheckStateRole).toInt() == Qt::Checked) {
             QString plateNumber = gridmodel->item(row, DataList::COL_PLATENUM)->text();
             QString email = gridmodel->item(row, DataList::COL_EMAIL)->text();
+            QString dueAmount = gridmodel->item(row, DataList::COL_UNPAIDFEE)->text(); // 청구 금액 추가
 
             // 이메일 형식 유효성 검사
             QRegularExpressionMatch match = emailRegex.match(email);
             if (match.hasMatch()) {
-                checkedClients.append(qMakePair(plateNumber, email)); // 유효한 경우만 추가
+                Client client;
+                client.plateNumber = plateNumber;
+                client.email = email;
+                client.dueAmount = dueAmount;
+                checkedClients.append(client); // Client 구조체 추가
             } else {
                 qDebug() << "Invalid email format:" << email;
             }

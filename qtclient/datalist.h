@@ -1,6 +1,7 @@
 #ifndef DATALIST_H
 #define DATALIST_H
 
+#include "sendemail.h"
 #include <QWidget>
 #include <QTableWidget>
 #include <QTableView>
@@ -30,7 +31,7 @@ public:
         COL_EMAIL,
         COL_COUNT // 총 열개수
     };
-    QList<QPair<QString, QString>> getCheckedClients() const;
+    QList<Client> getCheckedClients() const;
 public slots :
     void onImageDownloaded(); // 이미지 다운로드 슬롯
 

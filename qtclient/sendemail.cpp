@@ -86,73 +86,66 @@ void SendEmail::on_sendEmail_clicked()
 
     EmailAddress sender = stringToEmail(ui->sender->text());
 
-    QStringList rcptStringList = ui->recipients->text().split(';');
-
-    QString subject = ui->subject->text();
-    QString html = ui->texteditor->toHtml();
-
-    SmtpClient smtp (host, port, ssl ? SmtpClient::SslConnection : SmtpClient::TcpConnection);
-
-    MimeMessage message;
-
-    message.setSender(sender);
-    message.setSubject(subject);
-
-    for (int i = 0; i < rcptStringList.size(); ++i)
-        message.addRecipient(stringToEmail(rcptStringList.at(i)));
-
-    MimeHtml content;
-    content.setHtml(html);
-
-    message.addPart(&content);
-
-    QList<QFile*> files;
-    for (int i = 0; i < ui->attachments->count(); ++i)
-    {
-        QFile* file = new QFile(ui->attachments->item(i)->text());
-        files.append(file);
-
-        MimeAttachment* attachment = new MimeAttachment(file);
-
-        message.addPart(attachment, true);
+    if (clients.isEmpty()) {
+        QMessageBox::warning(this, "No Recipients", "No client data available for email sending.");
+        return;
     }
 
+    QString subjectTemplate = ui->subject->text();
+    QString bodyTemplate = ui->texteditor->toHtml();
+
+    SmtpClient smtp(host, port, ssl ? SmtpClient::SslConnection : SmtpClient::TcpConnection);
+
     smtp.connectToHost();
-    if (!smtp.waitForReadyConnected())
-    {
+    if (!smtp.waitForReadyConnected()) {
         errorMessage("Connection Failed");
         return;
     }
 
-    if (auth)
-    {
+    if (auth) {
         smtp.login(user, password);
-        if (!smtp.waitForAuthenticated())
-        {
-            errorMessage("Authentification Failed");
+        if (!smtp.waitForAuthenticated()) {
+            errorMessage("Authentication Failed");
             return;
         }
     }
 
-    smtp.sendMail(message);
-    if (!smtp.waitForMailSent())
-    {
-        errorMessage("Mail sending failed");
-        return;
-    }
-    else
-    {
-        QMessageBox okMessage (this);
-        okMessage.setText("The email was succesfully sent.");
-        okMessage.exec();
+    for (const auto &client : clients) {
+        EmailAddress recipient(client.email);
+
+        MimeMessage message;
+        message.setSender(sender);
+        message.addRecipient(recipient);
+
+        // 템플릿 치환
+        QString subject = processTemplate(subjectTemplate, client);
+        QString htmlBody = processTemplate(bodyTemplate, client);
+
+        message.setSubject(subject);
+
+        // HTML 콘텐츠 설정
+        MimeHtml content;
+        content.setHtml(htmlBody); // HTML 본문 설정
+
+        message.addPart(&content);
+
+        qDebug() << "Sending email to:" << client.email;
+        qDebug() << "Subject:" << subject;
+        qDebug() << "HTML Body:" << htmlBody;
+
+        smtp.sendMail(message);
+        if (!smtp.waitForMailSent()) {
+            qDebug() << "Failed to send email to" << client.email;
+        } else {
+            qDebug() << "Email sent to" << client.email;
+        }
     }
 
     smtp.quit();
 
-    for (auto file : files) {
-        delete file;
-    }
+    QMessageBox::information(this, "Email Sent", "Emails have been sent successfully.");
 }
+
 
 void SendEmail::errorMessage(const QString &message)
 {
@@ -176,3 +169,23 @@ void SendEmail::setRecipientEmails(const QStringList &emails)
     ui->recipients->setText(emailStrings.join(";")); // 세미콜론으로 구분
 }
 
+QString SendEmail::processTemplate(const QString &templateStr, const Client &client)
+{
+    QString processedStr = templateStr;
+    processedStr.replace("%PLATENUM", client.plateNumber); // 번호판 치환
+    processedStr.replace("%DUE", client.dueAmount);       // 청구 금액 치환
+    return processedStr;
+}
+
+void SendEmail::setClients(const QList<Client> &clients)
+{
+    this->clients = clients;
+
+    // 이메일 필드에 클라이언트 이메일 추가
+    QStringList emailStrings;
+    for (const auto &client : clients) {
+        emailStrings.append(client.email);
+    }
+
+    ui->recipients->setText(emailStrings.join(";")); // 세미콜론으로 구분
+}

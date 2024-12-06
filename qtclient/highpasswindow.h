@@ -25,6 +25,7 @@ private slots:
     void on_mail_Button_clicked();
     void initializeDatabaseManager();
 
+
 private:
     Ui::highPassWindow *ui;
     DataList *dataList; // DataList 객체 선언

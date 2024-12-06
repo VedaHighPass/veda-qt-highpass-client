@@ -34,7 +34,7 @@ highPassWindow::highPassWindow(QWidget *parent)
     QList<QWidget*> widgets = {
         ui->top_background,
         ui->mid_background,
-        ui->Bill_Button,
+        ui->Charge_Button,
         ui->mail_Button,
         ui->register_Button,
         ui->tableView
@@ -250,23 +250,16 @@ void highPassWindow::updatePageButtons(int totalRecords) {
 
 void highPassWindow::on_mail_Button_clicked()
 {
-    QList<QPair<QString, QString>> checkedClients = dataList->getCheckedClients();
+    QList<Client> checkedClients = dataList->getCheckedClients();
 
     if (checkedClients.isEmpty()) {
-        QMessageBox::warning(this, "No Selection", "Please select at least one client to send an email.");
+        QMessageBox::warning(this, "No Selection", "Please select at least one client for billing.");
         return;
     }
 
-        // 이메일 목록 추출
-    QStringList emails;
-    for (const auto &client : checkedClients) {
-        emails.append(client.second); // 두 번째 값이 이메일
-        qDebug() << client.second;
-    }
-
-    SendEmail *mailWidget = new SendEmail(this); // 항상 새 객체 생성
-    mailWidget->setWindowFlags(Qt::Window); // 독립 창으로 설정
-    mailWidget->setRecipientEmails(emails); // 이메일 목록 전달
+    SendEmail *mailWidget = new SendEmail(this);
+    mailWidget->setWindowFlags(Qt::Window);
+    mailWidget->setClients(checkedClients); // Client 데이터 전달
 
     mailWidget->setAttribute(Qt::WA_DeleteOnClose); // 창 닫힐 때 자동 삭제
     mailWidget->show();
@@ -338,10 +331,5 @@ void highPassWindow::updateIcon() {
     } else {
         ui->icon_Label->setPixmap(QPixmap(":/images/images/red_icon.png"));
     }
-}
-
-void highPassWindow::on_Bill_Button_clicked()
-{
-
 }
 
