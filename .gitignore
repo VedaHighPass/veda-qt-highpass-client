@@ -54,3 +54,6 @@ compile_commands.json
 *_qmlcache.qrc
 
 /qtclient/build/
+
+/qtclient/demo_vars.h
+
