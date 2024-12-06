@@ -152,8 +152,9 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     // JSON 키 매핑 및 기본값 처리
     row[DataList::COL_PHOTO] = entryImagePath;
 
-    row[DataList::COL_REGISTRATION] = obj.contains("Registration") ? obj["Registration"].toInt() : 0;
-    row[DataList::COL_PAYMENT] = obj.contains("Payment") ? obj["Payment"].toInt() : 0;
+    row[DataList::COL_EMAIL] = obj.contains("Email") && !obj["Email"].toString().isEmpty()
+                                   ? obj["Email"].toString()
+                                   : "-";
     row[DataList::COL_PLATENUM] = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
 
     // GateNumber -> GateName 변환
@@ -184,8 +185,7 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
                                       : "-";
 
     // 기타 데이터
-    row[DataList::COL_BILL_DATE] = obj.contains("BillDate") ? obj["BillDate"].toString("-") : "-";
-
+    //row[DataList::COL_BILL_DATE] = obj.contains("BillDate") ? obj["BillDate"].toString("-") : "-";
     return row;
 }
 

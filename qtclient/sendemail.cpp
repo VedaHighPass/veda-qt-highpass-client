@@ -162,3 +162,17 @@ void SendEmail::errorMessage(const QString &message)
 
     err.exec();
 }
+
+void SendEmail::setRecipientEmails(const QStringList &emails)
+{
+    recipientEmails = emails;
+
+    // 이메일 리스트를 UI recipients 필드에 추가
+    QStringList emailStrings;
+    for (const QString &email : recipientEmails) {
+        emailStrings.append(email); // 이메일 문자열로 추가
+    }
+
+    ui->recipients->setText(emailStrings.join(";")); // 세미콜론으로 구분
+}
+

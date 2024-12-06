@@ -34,6 +34,7 @@ public:
     ~SendEmail();
 
     static EmailAddress stringToEmail(const QString & str);
+    void setRecipientEmails(const QStringList &emails);
 
 private slots:
     void on_addAttachment_clicked();
@@ -44,6 +45,7 @@ private:
     Ui::SendEmail *ui;
 
     void errorMessage(const QString & message);
+    QStringList recipientEmails;
 };
 
 #endif // SENDEMAIL_H

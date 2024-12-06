@@ -32,10 +32,9 @@ void DataList::GridTableView() {
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_END_LOCATION, new QStandardItem(QString("Exit")));
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_END_DATE, new QStandardItem(QString("Exit Date")));
 
-    gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_BILL_DATE, new QStandardItem(QString("Bill")));
+    //gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_BILL_DATE, new QStandardItem(QString("Bill")));
     gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_UNPAIDFEE, new QStandardItem(QString("Due")));
-    gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_REGISTRATION, new QStandardItem(QString("Reg")));
-    gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_PAYMENT, new QStandardItem(QString("Paid")));
+    gridmodel->setHorizontalHeaderItem(DataList::Columns::COL_EMAIL, new QStandardItem(QString("Email")));
 
 
     QCheckBox* headerCheckbox = new QCheckBox(tableView);
@@ -77,11 +76,10 @@ void DataList::GridTableView() {
 
     tableView->setColumnWidth(DataList::Columns::COL_START_DATE, 80);
     tableView->setColumnWidth(DataList::Columns::COL_END_DATE, 80);
-    tableView->setColumnWidth(DataList::Columns::COL_BILL_DATE, 80);
+    //tableView->setColumnWidth(DataList::Columns::COL_BILL_DATE, 80);
 
     tableView->setColumnWidth(DataList::Columns::COL_UNPAIDFEE,100);
-    tableView->setColumnWidth(DataList::Columns::COL_REGISTRATION,40);
-    tableView->setColumnWidth(DataList::Columns::COL_PAYMENT,40);
+    tableView->setColumnWidth(DataList::Columns::COL_EMAIL,160);
 
     // CheckBoxDelegate 설정
     CheckBoxDelegate *f_checkboxdelegate = new CheckBoxDelegate(tableView);
@@ -182,21 +180,28 @@ void DataList::onImageDownloaded() {
 
     reply->deleteLater();
 }
-// 작동이안댐..이거해보기
+
 QList<QPair<QString, QString>> DataList::getCheckedClients() const {
     QList<QPair<QString, QString>> checkedClients;
+
+    // 이메일 유효성 검사 정규식
+    QRegularExpression emailRegex(R"((^[\w\.-]+@[\w\.-]+\.\w{2,}$))");
 
     for (int row = 0; row < gridmodel->rowCount(); ++row) {
         QStandardItem *checkBoxItem = gridmodel->item(row, DataList::COL_CHECKBOX);
         if (checkBoxItem && checkBoxItem->data(Qt::CheckStateRole).toInt() == Qt::Checked) {
-            // 번호판과 이메일 정보 가져오기
             QString plateNumber = gridmodel->item(row, DataList::COL_PLATENUM)->text();
-            QString email = gridmodel->item(row, DataList::COL_PATH)->text(); // EMAIL 열로 수정 필요
-            checkedClients.append(qMakePair(plateNumber, email));
-            qDebug() << plateNumber;
+            QString email = gridmodel->item(row, DataList::COL_EMAIL)->text();
+
+            // 이메일 형식 유효성 검사
+            QRegularExpressionMatch match = emailRegex.match(email);
+            if (match.hasMatch()) {
+                checkedClients.append(qMakePair(plateNumber, email)); // 유효한 경우만 추가
+            } else {
+                qDebug() << "Invalid email format:" << email;
+            }
         }
     }
-
     return checkedClients;
 }
 

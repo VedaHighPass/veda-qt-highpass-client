@@ -25,10 +25,9 @@ public:
         COL_START_DATE,
         COL_END_LOCATION,
         COL_END_DATE,
-        COL_BILL_DATE,
+        //COL_BILL_DATE,
         COL_UNPAIDFEE,
-        COL_REGISTRATION,
-        COL_PAYMENT,
+        COL_EMAIL,
         COL_COUNT // 총 열개수
     };
     QList<QPair<QString, QString>> getCheckedClients() const;

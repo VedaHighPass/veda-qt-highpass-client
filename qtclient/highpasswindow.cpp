@@ -250,9 +250,23 @@ void highPassWindow::updatePageButtons(int totalRecords) {
 
 void highPassWindow::on_mail_Button_clicked()
 {
-    dataList->getCheckedClients();
+    QList<QPair<QString, QString>> checkedClients = dataList->getCheckedClients();
+
+    if (checkedClients.isEmpty()) {
+        QMessageBox::warning(this, "No Selection", "Please select at least one client to send an email.");
+        return;
+    }
+
+        // 이메일 목록 추출
+    QStringList emails;
+    for (const auto &client : checkedClients) {
+        emails.append(client.second); // 두 번째 값이 이메일
+        qDebug() << client.second;
+    }
+
     SendEmail *mailWidget = new SendEmail(this); // 항상 새 객체 생성
     mailWidget->setWindowFlags(Qt::Window); // 독립 창으로 설정
+    mailWidget->setRecipientEmails(emails); // 이메일 목록 전달
 
     mailWidget->setAttribute(Qt::WA_DeleteOnClose); // 창 닫힐 때 자동 삭제
     mailWidget->show();
@@ -296,19 +310,6 @@ void highPassWindow::initializeDatabaseManager()
 
     QMessageBox::information(this, "Database Connected", "Database connection initialized successfully.");
     updateIcon();
-
-    /*dbManager->fetchGateFees([this](bool success) {
-        if (success) {
-            connect(dbManager, &DatabaseManager::dataReady, this, [this](const QList<QList<QVariant>> &data) {
-                dataList->populateData(data);
-            });
-            connect(dbManager, &DatabaseManager::updatePageNavigation, this, &highPassWindow::updatePageButtons);
-
-            QMessageBox::information(this, "Database Connected", "Database connection initialized successfully.");
-        } else {
-            QMessageBox::warning(this, "Server Connecting Error", "Cannot connect to server. Please check the IP address and try again.");
-        }
-    });*/
 }
 
 bool highPassWindow::validateIpAddress(const QString &ipAddress) const
@@ -338,3 +339,9 @@ void highPassWindow::updateIcon() {
         ui->icon_Label->setPixmap(QPixmap(":/images/images/red_icon.png"));
     }
 }
+
+void highPassWindow::on_Bill_Button_clicked()
+{
+
+}
+
