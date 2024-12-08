@@ -9,6 +9,7 @@
 #include <QNetworkReply>
 #include <QEventLoop>
 #include <QTimer>
+#include <QVariant>
 
 DatabaseManager::DatabaseManager(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this)) {
