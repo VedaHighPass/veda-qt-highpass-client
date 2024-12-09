@@ -48,20 +48,29 @@ QCheckBox::indicator:unchecked {
    <widget class="QPushButton" name="search_Button">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>290</x>
       <y>20</y>
-      <width>51</width>
+      <width>41</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
     border: none; /* 테두리를 없애고 싶다면 */
-    background-color: transparent; /* 배경을 투명하게 설정 */
+	background-color: rgb(255, 65, 65);
+     background-color: transparent; /* 배경을 투명하게 설정 */
     background-repeat: no-repeat; /* 반복 방지 */
     background-position: center; /* 아이콘 위치를 중앙으로 */
+	border-radius: 20px;
 }
-</string>
+
+QPushButton:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* hover 시 배경색을 살짝 어둡게 설정 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(0, 0, 0, 0.2); /* 클릭 시 더 짙은 색상 */
+}</string>
     </property>
     <property name="text">
      <string/>
@@ -577,7 +586,7 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>9</hour>
+      <hour>0</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
@@ -662,7 +671,7 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>9</hour>
+      <hour>0</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
@@ -867,20 +876,28 @@ border-radius:10px;</string>
    <widget class="QPushButton" name="DB_Button">
     <property name="geometry">
      <rect>
-      <x>951</x>
-      <y>11</y>
-      <width>51</width>
-      <height>51</height>
+      <x>953</x>
+      <y>20</y>
+      <width>41</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
     border: none; /* 테두리를 없애고 싶다면 */
-    background-color: transparent; /* 배경을 투명하게 설정 */
+     background-color: transparent; /* 배경을 투명하게 설정 */
     background-repeat: no-repeat; /* 반복 방지 */
     background-position: center; /* 아이콘 위치를 중앙으로 */
+	border-radius: 20px;
 }
-</string>
+
+QPushButton:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* hover 시 배경색을 살짝 어둡게 설정 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(0, 0, 0, 0.2); /* 클릭 시 더 짙은 색상 */
+}</string>
     </property>
     <property name="text">
      <string/>

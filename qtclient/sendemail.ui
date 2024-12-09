@@ -7,11 +7,17 @@
     <x>0</x>
     <y>0</y>
     <width>710</width>
-    <height>556</height>
+    <height>573</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background-color: rgb(237, 238, 246); 
+}
+</string>
   </property>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
@@ -45,7 +51,21 @@
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="host"/>
+       <widget class="QLineEdit" name="host">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    padding: 1px;
+    padding-left: 10px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 1px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QLabel" name="label_2">
@@ -68,6 +88,17 @@
       </item>
       <item>
        <widget class="QSpinBox" name="port">
+        <property name="styleSheet">
+         <string notr="true">QSpinBox {
+        border: 1px solid gray;
+        border-radius: 5px;
+        background-color: rgb(255, 255, 255);
+    }
+    QSpinBox QLineEdit {
+        background-color: white;
+        color: black;
+    }</string>
+        </property>
         <property name="maximum">
          <number>99999</number>
         </property>
@@ -135,8 +166,8 @@
          <widget class="QLineEdit" name="username">
           <property name="minimumSize">
            <size>
-            <width>211</width>
-            <height>27</height>
+            <width>138</width>
+            <height>24</height>
            </size>
           </property>
           <property name="maximumSize">
@@ -144,6 +175,19 @@
             <width>211</width>
             <height>27</height>
            </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QLineEdit {
+    padding: 1px;
+    padding-left: 35px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 1px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
           </property>
          </widget>
         </item>
@@ -156,6 +200,19 @@
         </item>
         <item>
          <widget class="QLineEdit" name="password">
+          <property name="styleSheet">
+           <string notr="true">QLineEdit {
+    padding: 1px;
+    padding-left: 10px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 1px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
+          </property>
           <property name="echoMode">
            <enum>QLineEdit::EchoMode::Password</enum>
           </property>
@@ -164,18 +221,6 @@
        </layout>
       </item>
      </layout>
-    </item>
-    <item>
-     <widget class="QLabel" name="label_7">
-      <property name="font">
-       <font>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Mime E-mail</string>
-      </property>
-     </widget>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -193,13 +238,33 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+	font-weight: bold;	
+	font-size: 15px;
+}</string>
+        </property>
         <property name="text">
-         <string>Sender:</string>
+         <string>Sender :</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="sender"/>
+       <widget class="QLineEdit" name="sender">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    padding: 1px;
+    padding-left: 10px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 2px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -219,13 +284,33 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+	font-weight: bold;	
+	font-size: 15px;
+}</string>
+        </property>
         <property name="text">
-         <string>Recipients:</string>
+         <string>Recipients :</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="recipients"/>
+       <widget class="QLineEdit" name="recipients">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    padding: 1px;
+    padding-left: 10px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 2px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -245,18 +330,54 @@
           <height>16777215</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel {
+	font-weight: bold;	
+	font-size: 15px;
+}</string>
+        </property>
         <property name="text">
-         <string>Subject:</string>
+         <string>Subject :</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QLineEdit" name="subject"/>
+       <widget class="QLineEdit" name="subject">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    padding: 1px;
+    padding-left: 10px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 2px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
+        </property>
+        <property name="text">
+         <string>High Pass Gate Billing : [ %DUE ]</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
     <item>
      <widget class="QTextEdit" name="texteditor">
+      <property name="styleSheet">
+       <string notr="true">QTextEdit {
+    padding: 1px;
+    padding-left: 10px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 2px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
+      </property>
       <property name="html">
        <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;meta charset=&quot;utf-8&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
@@ -265,16 +386,11 @@ hr { height: 1px; border-width: 0; }
 li.unchecked::marker { content: &quot;\2610&quot;; }
 li.checked::marker { content: &quot;\2612&quot;; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'맑은 고딕'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;lt;html&amp;gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;lt;head&amp;gt;&amp;lt;title&amp;gt;Toll Fee Notification&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;lt;body style=&amp;quot;font-family: Arial, sans-serif; line-height: 1.5; color: #333;&amp;quot;&amp;gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    &amp;lt;p&amp;gt;Dear Customer,&amp;lt;/p&amp;gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    &amp;lt;p&amp;gt;Your vehicle with plate number &amp;lt;b&amp;gt;%PLATENUM&amp;lt;/b&amp;gt; has an unpaid toll fee of &amp;lt;b&amp;gt;%DUE&amp;lt;/b&amp;gt;.&amp;lt;/p&amp;gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    &amp;lt;p&amp;gt;Please make the payment at your earliest convenience.&amp;lt;/p&amp;gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;    &amp;lt;p&amp;gt;Thank you.&amp;lt;/p&amp;gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;lt;/body&amp;gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&amp;lt;/html&amp;gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;Dear Customer,&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Your vehicle with plate number &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;%PLATENUM&lt;/span&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt; has an unpaid toll fee of &lt;/span&gt;&lt;span style=&quot; font-size:11pt; font-weight:700;&quot;&gt;%DUE.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Please make the payment at your earliest convenience. Thank you.&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textInteractionFlags">
        <set>Qt::TextInteractionFlag::LinksAccessibleByKeyboard|Qt::TextInteractionFlag::LinksAccessibleByMouse|Qt::TextInteractionFlag::TextBrowserInteraction|Qt::TextInteractionFlag::TextEditable|Qt::TextInteractionFlag::TextEditorInteraction|Qt::TextInteractionFlag::TextSelectableByKeyboard|Qt::TextInteractionFlag::TextSelectableByMouse</set>
@@ -306,6 +422,25 @@ li.checked::marker { content: &quot;\2612&quot;; }
             <height>16777215</height>
            </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+	border-radius: 15px;
+	width : 130px;
+	height: 30px;
+	background-color: rgb(35, 76, 159); 
+	color: white;
+	font-weight: bold;
+}
+QPushButton:pressed {
+	border: 1px solid rgb(244, 244, 244);
+	background-color: #222222;
+}
+
+QPushButton:hover {
+    background-color: rgb(20, 44, 91);
+	color : rgb(255,255,255);
+}</string>
+          </property>
           <property name="text">
            <string>Add File</string>
           </property>
@@ -321,12 +456,44 @@ li.checked::marker { content: &quot;\2612&quot;; }
           <height>64</height>
          </size>
         </property>
+        <property name="styleSheet">
+         <string notr="true">QListWidget {
+    padding: 1px;
+    padding-left: 10px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 2px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
+        </property>
        </widget>
       </item>
      </layout>
     </item>
     <item>
      <widget class="QPushButton" name="sendEmail">
+      <property name="styleSheet">
+       <string notr="true">QPushButton {
+	border-radius: 20px;
+	width : 130px;
+	height: 40px;
+	background-color: rgb(35, 76, 159); 
+	color: white;
+	font-weight: bold;	font-size: 15px;
+}
+QPushButton:pressed {
+	border: 1px solid rgb(244, 244, 244);
+	background-color: #222222;
+}
+
+QPushButton:hover {
+    background-color: rgb(20, 44, 91);
+	color : rgb(255,255,255);
+}</string>
+      </property>
       <property name="text">
        <string>Send Email</string>
       </property>

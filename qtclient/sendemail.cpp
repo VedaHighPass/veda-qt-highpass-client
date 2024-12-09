@@ -41,7 +41,7 @@ SendEmail::SendEmail(QWidget *parent) :
     ui->password->setText(SENDER_PASSWORD);
 
     ui->sender->setText(QString(SENDER_NAME) + "<" + SENDER_EMAIL + ">");
-    ui->recipients->setText(QString(RECIPIENT_NAME) + "<" + RECIPIENT_EMAIL + ">");
+    //ui->recipients->setText(QString(RECIPIENT_NAME) + "<" + RECIPIENT_EMAIL + ">");
 }
 
 SendEmail::~SendEmail()
@@ -129,6 +129,17 @@ void SendEmail::on_sendEmail_clicked()
 
         message.addPart(&content);
 
+        // add file
+        QList<QFile*> files;
+        for (int i = 0; i < ui->attachments->count(); ++i)
+        {
+            QFile* file = new QFile(ui->attachments->item(i)->text());
+            files.append(file);
+
+            MimeAttachment* attachment = new MimeAttachment(file);
+            message.addPart(attachment, true);
+        }
+
         qDebug() << "Sending email to:" << client.email;
         qDebug() << "Subject:" << subject;
         qDebug() << "HTML Body:" << htmlBody;
@@ -138,6 +149,10 @@ void SendEmail::on_sendEmail_clicked()
             qDebug() << "Failed to send email to" << client.email;
         } else {
             qDebug() << "Email sent to" << client.email;
+        }
+
+        for (auto file : files) {
+            delete file;
         }
     }
 
