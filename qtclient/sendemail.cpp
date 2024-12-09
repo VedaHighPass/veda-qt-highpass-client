@@ -22,6 +22,7 @@
 #include <QMessageBox>
 
 #include <iostream>
+#include <QBuffer>
 
 #include "demo_vars.h"
 
@@ -41,7 +42,7 @@ SendEmail::SendEmail(QWidget *parent) :
     ui->password->setText(SENDER_PASSWORD);
 
     ui->sender->setText(QString(SENDER_NAME) + "<" + SENDER_EMAIL + ">");
-    ui->recipients->setText(QString(RECIPIENT_NAME) + "<" + RECIPIENT_EMAIL + ">");
+    //ui->recipients->setText(QString(RECIPIENT_NAME) + "<" + RECIPIENT_EMAIL + ">");
 }
 
 SendEmail::~SendEmail()
@@ -129,6 +130,36 @@ void SendEmail::on_sendEmail_clicked()
 
         message.addPart(&content);
 
+        // add attached file
+        QList<QFile*> files;
+        for (int i = 0; i < ui->attachments->count(); ++i)
+        {
+            QFile* file = new QFile(ui->attachments->item(i)->text());
+            files.append(file);
+
+            MimeAttachment* attachment = new MimeAttachment(file);
+            message.addPart(attachment, true);
+        }
+
+        QList<QString> tempFiles; // 임시 파일 경로를 저장할 리스트
+        if (!client.image.isNull()) {
+            // 임시 파일 생성
+            QString tempPath = QDir::tempPath() + "/" + client.plateNumber + ".png";
+            qDebug() << "Temporary file path:" << tempPath;
+            if (client.image.save(tempPath, "PNG")) { // 이미지를 임시 파일에 저장
+                QFile *file = new QFile(tempPath);
+                if (file->open(QIODevice::ReadOnly)) {
+                    MimeAttachment *attachment = new MimeAttachment(file); // QFile 사용
+                    message.addPart(attachment, true); // 첨부 파일 추가
+                    tempFiles.append(tempPath);
+                } else {
+                    qDebug() << "Failed to open temp file for plate number:" << client.plateNumber;
+                    delete file;
+                }
+            } else {
+                qDebug() << "Failed to save image to temp file for plate number:" << client.plateNumber;
+            }
+        }
         qDebug() << "Sending email to:" << client.email;
         qDebug() << "Subject:" << subject;
         qDebug() << "HTML Body:" << htmlBody;
@@ -138,6 +169,17 @@ void SendEmail::on_sendEmail_clicked()
             qDebug() << "Failed to send email to" << client.email;
         } else {
             qDebug() << "Email sent to" << client.email;
+        }
+
+        for (auto file : files) {
+            delete file;
+        }
+        // 이메일 전송 완료 후 임시 파일 삭제
+        for (const QString &tempPath : tempFiles) {
+            if (QFile::exists(tempPath)) {
+                QFile::remove(tempPath);
+                qDebug() << "Temporary file deleted:" << tempPath;
+            }
         }
     }
 

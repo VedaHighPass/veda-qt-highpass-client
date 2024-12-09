@@ -193,6 +193,16 @@ QList<Client> DataList::getCheckedClients() const {
             QString email = gridmodel->item(row, DataList::COL_EMAIL)->text();
             QString dueAmount = gridmodel->item(row, DataList::COL_UNPAIDFEE)->text(); // 청구 금액 추가
 
+            // 이미지를 가져옴
+            QPixmap image;
+            QStandardItem *photoItem = gridmodel->item(row, DataList::COL_PHOTO);
+            if (photoItem) {
+                QVariant decoration = photoItem->data(Qt::DecorationRole);
+                if (decoration.canConvert<QPixmap>()) {
+                    image = decoration.value<QPixmap>();
+                }
+            }
+
             // 이메일 형식 유효성 검사
             QRegularExpressionMatch match = emailRegex.match(email);
             if (match.hasMatch()) {
@@ -200,6 +210,7 @@ QList<Client> DataList::getCheckedClients() const {
                 client.plateNumber = plateNumber;
                 client.email = email;
                 client.dueAmount = dueAmount;
+                client.image = image;
                 checkedClients.append(client); // Client 구조체 추가
             } else {
                 qDebug() << "Invalid email format:" << email;

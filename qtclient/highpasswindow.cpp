@@ -27,7 +27,7 @@ highPassWindow::highPassWindow(QWidget *parent)
     ui->search_Line->setPlaceholderText("Search...");
     ui->tableView->setFocusPolicy(Qt::NoFocus);
 
-    // LineEdit에 IP 형식 입력 제한 설정
+    ui->db_address_Line->setPlaceholderText("Search...");
     QRegularExpression ipRegex(R"((\d{1,3}\.){3}\d{1,3})"); // IPv4 형식
     QRegularExpressionValidator *ipValidator = new QRegularExpressionValidator(ipRegex, this);
     ui->db_address_Line->setValidator(ipValidator);

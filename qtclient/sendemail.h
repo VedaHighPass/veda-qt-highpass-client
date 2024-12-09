@@ -29,6 +29,7 @@ struct Client {
     QString plateNumber;
     QString email;
     QString dueAmount; // 청구 금액
+    QPixmap image;
 };
 
 class SendEmail : public QWidget
