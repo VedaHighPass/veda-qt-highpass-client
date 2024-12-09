@@ -9,6 +9,7 @@
 #include <QNetworkReply>
 #include <QEventLoop>
 #include <QTimer>
+#include <QVariant>
 
 DatabaseManager::DatabaseManager(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this)) {
@@ -184,8 +185,6 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
                                       ? exitTime.toString("yyyy-MM-dd HH:mm")
                                       : "-";
 
-    // 기타 데이터
-    //row[DataList::COL_BILL_DATE] = obj.contains("BillDate") ? obj["BillDate"].toString("-") : "-";
     return row;
 }
 

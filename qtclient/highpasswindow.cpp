@@ -2,6 +2,8 @@
 #include "ui_highpasswindow.h"
 #include "datalist.h" // dataList 포함
 #include "databasemanager.h"
+#include "videostream.h"
+
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -25,7 +27,7 @@ highPassWindow::highPassWindow(QWidget *parent)
     ui->search_Line->setPlaceholderText("Search...");
     ui->tableView->setFocusPolicy(Qt::NoFocus);
 
-    // LineEdit에 IP 형식 입력 제한 설정
+    ui->db_address_Line->setPlaceholderText("Search...");
     QRegularExpression ipRegex(R"((\d{1,3}\.){3}\d{1,3})"); // IPv4 형식
     QRegularExpressionValidator *ipValidator = new QRegularExpressionValidator(ipRegex, this);
     ui->db_address_Line->setValidator(ipValidator);
@@ -331,5 +333,17 @@ void highPassWindow::updateIcon() {
     } else {
         ui->icon_Label->setPixmap(QPixmap(":/images/images/red_icon.png"));
     }
+}
+
+
+void highPassWindow::on_cctv_Button_clicked()
+{
+    videoStream* ui_videostream = new videoStream();
+    ui_videostream->setWindowFlags(Qt::Window);
+
+    ui_videostream->setAttribute(Qt::WA_DeleteOnClose); // 창 닫힐 때 자동 삭제
+    ui_videostream->show();
+    ui_videostream->raise();
+    ui_videostream->activateWindow();
 }
 

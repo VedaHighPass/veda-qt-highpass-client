@@ -48,20 +48,29 @@ QCheckBox::indicator:unchecked {
    <widget class="QPushButton" name="search_Button">
     <property name="geometry">
      <rect>
-      <x>280</x>
+      <x>290</x>
       <y>20</y>
-      <width>51</width>
+      <width>41</width>
       <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
     border: none; /* 테두리를 없애고 싶다면 */
-    background-color: transparent; /* 배경을 투명하게 설정 */
+	background-color: rgb(255, 65, 65);
+     background-color: transparent; /* 배경을 투명하게 설정 */
     background-repeat: no-repeat; /* 반복 방지 */
     background-position: center; /* 아이콘 위치를 중앙으로 */
+	border-radius: 20px;
 }
-</string>
+
+QPushButton:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* hover 시 배경색을 살짝 어둡게 설정 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(0, 0, 0, 0.2); /* 클릭 시 더 짙은 색상 */
+}</string>
     </property>
     <property name="text">
      <string/>
@@ -89,6 +98,7 @@ QCheckBox::indicator:unchecked {
     <property name="font">
      <font>
       <family>맑은 고딕</family>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -158,6 +168,7 @@ QPushButton:hover {
     <property name="font">
      <font>
       <pointsize>10</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -180,6 +191,7 @@ QPushButton:hover {
     <property name="font">
      <font>
       <pointsize>10</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -203,6 +215,7 @@ QPushButton:hover {
      <font>
       <family>맑은 고딕</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -244,6 +257,7 @@ QPushButton:hover {
     <property name="font">
      <font>
       <family>맑은 고딕</family>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -282,6 +296,7 @@ QPushButton:hover {
     <property name="font">
      <font>
       <family>맑은 고딕</family>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -486,13 +501,13 @@ QHeaderView::section:horizontal
 */</string>
     </property>
     <property name="editTriggers">
-     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+     <set>QAbstractItemView::NoEditTriggers</set>
     </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
     </property>
     <property name="selectionMode">
-     <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
+     <enum>QAbstractItemView::NoSelection</enum>
     </property>
     <property name="sortingEnabled">
      <bool>true</bool>
@@ -577,7 +592,7 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>9</hour>
+      <hour>0</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
@@ -662,7 +677,7 @@ QCalendarWidget QToolButton {
     </property>
     <property name="dateTime">
      <datetime>
-      <hour>9</hour>
+      <hour>0</hour>
       <minute>0</minute>
       <second>0</second>
       <year>2024</year>
@@ -759,6 +774,7 @@ border-radius:10px;</string>
      <font>
       <family>맑은 고딕</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -861,26 +877,34 @@ border-radius:10px;</string>
      <number>1</number>
     </property>
     <property name="orientation">
-     <enum>Qt::Orientation::Vertical</enum>
+     <enum>Qt::Vertical</enum>
     </property>
    </widget>
    <widget class="QPushButton" name="DB_Button">
     <property name="geometry">
      <rect>
-      <x>951</x>
-      <y>11</y>
-      <width>51</width>
-      <height>51</height>
+      <x>953</x>
+      <y>20</y>
+      <width>41</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="styleSheet">
      <string notr="true">QPushButton {
     border: none; /* 테두리를 없애고 싶다면 */
-    background-color: transparent; /* 배경을 투명하게 설정 */
+     background-color: transparent; /* 배경을 투명하게 설정 */
     background-repeat: no-repeat; /* 반복 방지 */
     background-position: center; /* 아이콘 위치를 중앙으로 */
+	border-radius: 20px;
 }
-</string>
+
+QPushButton:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* hover 시 배경색을 살짝 어둡게 설정 */
+}
+
+QPushButton:pressed {
+    background-color: rgba(0, 0, 0, 0.2); /* 클릭 시 더 짙은 색상 */
+}</string>
     </property>
     <property name="text">
      <string/>
@@ -924,6 +948,45 @@ border-radius:10px;</string>
      <bool>true</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="cctv_Button">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>230</y>
+      <width>130</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>맑은 고딕</family>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	border-radius: 5px;
+	background-color: rgb(255, 255, 255);
+	width : 130px;
+	height: 40px;
+	/*color: rgb(19, 35, 255);*/
+	color : rgb(35, 76, 159);
+}
+QPushButton:pressed {
+	border: 1px solid #333333;
+	background-color: #222222;
+}
+
+QPushButton:hover {
+    background-color: rgb(35, 76, 159); /* 마우스 오버 시 배경색 */
+	color: white;
+}</string>
+    </property>
+    <property name="text">
+     <string>CCTV</string>
+    </property>
+   </widget>
    <zorder>mid_background</zorder>
    <zorder>mid_background_2</zorder>
    <zorder>top_background</zorder>
@@ -957,6 +1020,7 @@ border-radius:10px;</string>
    <zorder>line</zorder>
    <zorder>DB_Button</zorder>
    <zorder>icon_Label</zorder>
+   <zorder>cctv_Button</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -964,7 +1028,7 @@ border-radius:10px;</string>
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>26</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

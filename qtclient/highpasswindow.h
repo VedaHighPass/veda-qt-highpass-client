@@ -26,6 +26,8 @@ private slots:
     void initializeDatabaseManager();
 
 
+    void on_cctv_Button_clicked();
+
 private:
     Ui::highPassWindow *ui;
     DataList *dataList; // DataList 객체 선언

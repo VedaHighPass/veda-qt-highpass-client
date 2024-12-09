@@ -9,5 +9,6 @@
         <file>images/db.png</file>
         <file>images/red_icon.png</file>
         <file>images/green_icon.png</file>
+        <file>images/videostreamback.png</file>
     </qresource>
 </RCC>

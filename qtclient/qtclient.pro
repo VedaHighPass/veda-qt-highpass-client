@@ -21,22 +21,32 @@ SOURCES += \
     databasemanager.cpp \
     datalist.cpp \
     highpasswindow.cpp \
+    httpclient.cpp \
     main.cpp \
     mainwindow.cpp \
-    sendemail.cpp
+    rtpclient.cpp \
+    sendemail.cpp \
+    stream_ui.cpp \
+    videostream.cpp
 
 HEADERS += \
     checkboxdelegate.h \
     databasemanager.h \
     datalist.h \
     highpasswindow.h \
+    httpclient.h \
     mainwindow.h \
-    sendemail.h
+    rtpclient.h \
+    sendemail.h \
+    stream_ui.h \
+    videostream.h
 
 FORMS += \
     highpasswindow.ui \
     mainwindow.ui \
-    sendemail.ui
+    sendemail.ui \
+    stream_ui.ui \
+    videostream.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
