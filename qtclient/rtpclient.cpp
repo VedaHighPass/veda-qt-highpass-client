@@ -88,7 +88,8 @@ void rtpClient::startFFmpegProcess(QString url) {
 //    qDebug() << program;
 //    QStringList arguments;
 //    #else // linux환경
-    QString program = "/usr/bin/ffmpeg";
+    //QString program = "/usr/bin/ffmpeg";
+    QString program = QDir::currentPath() + "/bin/ffmpeg.exe";
     qDebug() << program;
     QStringList arguments;
     //#endif

@@ -45,7 +45,9 @@ HttpClient::HttpClient()
 
 void HttpClient::addCamera(const QString &cameraName, const QString &rtspUrl)
 {
-    QUrl serverUrl("http://192.168.0.26:8080/camera"); // 서버 URL
+    /*
+    //QUrl serverUrl("http://192.168.0.26:8080/camera"); // 서버 URL
+    QUrl serverUrl("http://127.0.0.1:8080/camera"); // 서버 URL
       QNetworkRequest request(serverUrl);
       request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json"); // 헤더 설정
 
@@ -64,11 +66,13 @@ void HttpClient::addCamera(const QString &cameraName, const QString &rtspUrl)
        emit signal_finishAdd();
       // 요청 전송 디버그 로그
       qDebug() << "POST Request Sent:" << jsonDoc.toJson();
+*/
 }
 
 void HttpClient::loadCameras()
 {
-    QUrl url("http://192.168.0.26:8080/cameras");
+    //QUrl url("http://192.168.0.26:8080/cameras");
+    QUrl url("http://127.0.0.1:8080/cameras"); // 서버 URL
      QNetworkRequest request(url);
      QNetworkReply *reply = manager->get(request);
 
