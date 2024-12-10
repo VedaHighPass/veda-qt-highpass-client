@@ -339,11 +339,11 @@ void highPassWindow::updateIcon() {
 void highPassWindow::on_cctv_Button_clicked()
 {
     videoStream* ui_videostream = new videoStream();
-    ui_videostream->setWindowFlags(Qt::Window);
+    //ui_videostream->setWindowFlags(Qt::Window);
 
     ui_videostream->setAttribute(Qt::WA_DeleteOnClose); // 창 닫힐 때 자동 삭제
     ui_videostream->show();
-    ui_videostream->raise();
-    ui_videostream->activateWindow();
+    //ui_videostream->raise();
+    //ui_videostream->activateWindow();
 }
 

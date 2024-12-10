@@ -71,16 +71,29 @@ void HttpClient::addCamera(const QString &cameraName, const QString &rtspUrl)
 
 void HttpClient::loadCameras()
 {
-    //QUrl url("http://192.168.0.26:8080/cameras");
-    QUrl url("http://127.0.0.1:8080/cameras"); // 서버 URL
-     QNetworkRequest request(url);
-     QNetworkReply *reply = manager->get(request);
+//    QUrl url("http://192.168.0.26:8080/cameras");
+//    //QUrl url("https://127.0.0.1:8080/cameras"); // 서버 URL
+//     QNetworkRequest request(url);
+//     QNetworkReply *reply = manager->get(request);
 
-     // 응답이 오면 onCamerasLoaded 슬롯으로 전달
-     connect(reply, &QNetworkReply::finished, this, &HttpClient::onCamerasLoaded);
+//     // 응답이 오면 onCamerasLoaded 슬롯으로 전달
+//     connect(reply, &QNetworkReply::finished, this, &HttpClient::onCamerasLoaded);
 
-     // 요청 전송 디버그 로그
-     qDebug() << "GET Request Sent to: " << url.toString();
+//     // 요청 전송 디버그 로그
+//     qDebug() << "GET Request Sent to: " << url.toString();
+    QUrl url("https://192.168.0.26:8080/cameras");
+       QNetworkRequest request(url);
+
+       // SSL 오류 무시 (개발용)
+       connect(manager, &QNetworkAccessManager::sslErrors, this, [](QNetworkReply *reply, const QList<QSslError> &errors) {
+           Q_UNUSED(errors);
+           reply->ignoreSslErrors();
+       });
+
+       QNetworkReply *reply = manager->get(request);
+       connect(reply, &QNetworkReply::finished, this, &HttpClient::onCamerasLoaded);
+
+       qDebug() << "GET Request Sent to: " << url.toString();
 }
 
 
