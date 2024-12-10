@@ -35,11 +35,13 @@ void DatabaseManager::fetchData(const QString &url) {
     QNetworkRequest request;
     request.setUrl(QUrl(url)); // URL 설정
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+       // SSL 오류 무시 (개발용)
     connect(networkManager, &QNetworkAccessManager::sslErrors, this, [](QNetworkReply *reply, const QList<QSslError> &errors) {
         Q_UNUSED(errors);
         reply->ignoreSslErrors();
     });
     //networkManager->get(request); // GET 요청
+
     QNetworkReply* reply = networkManager->get(request); // GET 요청
     requestMap[reply] = url; // 요청과 URL 매핑
     qDebug() << "fetch Data";

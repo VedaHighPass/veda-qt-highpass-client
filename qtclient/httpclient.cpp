@@ -18,7 +18,10 @@ HttpClient::HttpClient(QObject *parent) : QObject(parent)
 HttpClient::HttpClient()
 {
 }
-
+HttpClient::~HttpClient()
+{
+    disconnectFromDatabase();
+}
 //void createCamera(const QString& cameraName, const QString& rtspUrl) {
 
 //}
@@ -205,4 +208,11 @@ QMap<QString,QString> HttpClient::getCameraUrlMap()
     qDebug()<<"getCameraMap!!!";
 
     return map_url;
+}
+void HttpClient::disconnectFromDatabase() {
+    if (manager) {
+        manager->clearAccessCache();
+        delete manager; // QNetworkAccessManager 객체 삭제
+        manager = nullptr;
+    }
 }

@@ -15,6 +15,7 @@ rtpClient::rtpClient() {
 }
 rtpClient::~rtpClient()
 {
+
    qDebug() <<"!!!!~rtpCLient()!!!!!";
    if (ffmpegProcess) {
        if (ffmpegProcess->state() != QProcess::NotRunning) {
@@ -27,10 +28,14 @@ rtpClient::~rtpClient()
 }
 
 void rtpClient::readFFmpegOutput() {
+    if (ffmpegProcess->state() == QProcess::Running) {
+        qDebug() << "FFmpeg process is not running.";
+    }
+
     QByteArray data = ffmpegProcess->readAllStandardOutput();
     // qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
     if (data.isEmpty()) {
-        qDebug() << "No data from ffmpeg. Check the process and arguments.";
+      //  qDebug() << "No data from ffmpeg. Check the process and arguments.";
     }
     // 데이터의 크기 확인
    // qDebug() << "Received data size:" << data.size();
@@ -103,7 +108,7 @@ void rtpClient::startFFmpegProcess(QString url) {
 //              << "-maxrate" << "40K"    // 최대 비트레이트 설정
 //ㅋ              << "-bufsize" << "4M"    // 버퍼 크기 설정 (4Mbps)
               << "-f" << "rawvideo"    // 출력을 raw 비디오로 설정
-              << "-loglevel" << "debug"
+           //   << "-loglevel" << "debug"
               << "-";                  // stdout으로 출력
 
     //  FFmpeg 실행
@@ -129,13 +134,14 @@ void rtpClient::startFFmpegProcess(QString url) {
         emit signal_streaming_start();
         QObject::connect(ffmpegProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readFFmpegOutput()));
     }
+
 }
 void rtpClient::finishFfmpeg()
 {
     if(ffmpegProcess)
-    {
+    {qDebug()<<"finishFFmpge";
         ffmpegProcess->terminate();
-        if(!ffmpegProcess->waitForFinished(3000))
+        if(!ffmpegProcess->waitForFinished(5000))
         {
             ffmpegProcess->kill();
         }
