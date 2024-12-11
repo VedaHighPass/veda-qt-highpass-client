@@ -7,6 +7,10 @@
 *.lai
 *.so
 *.so.*
+!libSmtpMime.so
+!libSmtpMime.so.2
+!libSmtpMime.so.2.0
+!libSmtpMime.so.2.0.0
 *.dll
 *.dylib
 
