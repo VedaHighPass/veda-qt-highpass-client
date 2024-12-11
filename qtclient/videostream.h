@@ -18,7 +18,7 @@ class videoStream : public QWidget
 
 public:
     explicit videoStream(QWidget *parent = nullptr);
-    ~videoStream();
+    ~videoStream() override;
 
 private slots:
 

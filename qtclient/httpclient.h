@@ -15,7 +15,8 @@ public:
     void loadCameras();
     QMap<QString,QString> getCameraUrlMap();
     HttpClient();
-
+    void disconnectFromDatabase();
+    ~HttpClient() override;
 private:
       QNetworkAccessManager* manager;
       QMap<QString,QString> map_url;

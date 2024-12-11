@@ -15,6 +15,7 @@ rtpClient::rtpClient() {
 }
 rtpClient::~rtpClient()
 {
+
    qDebug() <<"!!!!~rtpCLient()!!!!!";
    if (ffmpegProcess) {
        if (ffmpegProcess->state() != QProcess::NotRunning) {
@@ -27,10 +28,14 @@ rtpClient::~rtpClient()
 }
 
 void rtpClient::readFFmpegOutput() {
+    if (ffmpegProcess->state() == QProcess::Running) {
+        qDebug() << "FFmpeg process is not running.";
+    }
+
     QByteArray data = ffmpegProcess->readAllStandardOutput();
     // qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
     if (data.isEmpty()) {
-        qDebug() << "No data from ffmpeg. Check the process and arguments.";
+      //  qDebug() << "No data from ffmpeg. Check the process and arguments.";
     }
     // 데이터의 크기 확인
    // qDebug() << "Received data size:" << data.size();
@@ -88,8 +93,8 @@ void rtpClient::startFFmpegProcess(QString url) {
 //    qDebug() << program;
 //    QStringList arguments;
 //    #else // linux환경
-    //QString program = "/usr/bin/ffmpeg";
-    QString program = QDir::currentPath() + "/bin/ffmpeg.exe";
+    QString program = "/usr/bin/ffmpeg";
+    //QString program = QDir::currentPath() + "/bin/ffmpeg.exe";
     qDebug() << program;
     QStringList arguments;
     //#endif
@@ -98,11 +103,12 @@ void rtpClient::startFFmpegProcess(QString url) {
               << "-i" << url // "rtsp://192.168.1.15:8554"
               << "-s" << "640x480"
               << "-pix_fmt" << "rgb24"  // 픽셀 포맷을 raw RGB로 설정
+            //  <<"-threads"<<"1"
 //              << "-b:v" << "40K"        // 비디오 비트레이트 설정 (2Mbps)
 //              << "-maxrate" << "40K"    // 최대 비트레이트 설정
-//              << "-bufsize" << "4M"    // 버퍼 크기 설정 (4Mbps)
+//ㅋ              << "-bufsize" << "4M"    // 버퍼 크기 설정 (4Mbps)
               << "-f" << "rawvideo"    // 출력을 raw 비디오로 설정
-              << "-loglevel" << "debug"
+           //   << "-loglevel" << "debug"
               << "-";                  // stdout으로 출력
 
     //  FFmpeg 실행
@@ -117,7 +123,7 @@ void rtpClient::startFFmpegProcess(QString url) {
                 emit signal_ffmpeg_debug("FFmpeg error output:"+errorOutput,this);
             }
             emit signal_ffmpeg_debug("FFmpeg error output:"+errorOutput,this);
-            qDebug()<<"ffmepg debug : "<<errorOutput;
+            //qDebug()<<"ffmepg debug : "<<errorOutput;
         }
     });
 
@@ -128,13 +134,14 @@ void rtpClient::startFFmpegProcess(QString url) {
         emit signal_streaming_start();
         QObject::connect(ffmpegProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readFFmpegOutput()));
     }
+
 }
 void rtpClient::finishFfmpeg()
 {
     if(ffmpegProcess)
-    {
+    {qDebug()<<"finishFFmpge";
         ffmpegProcess->terminate();
-        if(!ffmpegProcess->waitForFinished(3000))
+        if(!ffmpegProcess->waitForFinished(5000))
         {
             ffmpegProcess->kill();
         }

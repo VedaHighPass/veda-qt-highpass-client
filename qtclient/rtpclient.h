@@ -12,7 +12,7 @@ public:
     static rtpClient* instance();
     rtpClient();
     rtpClient(const rtpClient &) = delete;
-    ~rtpClient();
+    ~rtpClient() override;
     rtpClient &operator=(const rtpClient &) = delete;
     // FFmpeg 프로세스 시작 및 데이터 읽기 메서드
     void startFFmpegProcess(QString url);

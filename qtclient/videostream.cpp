@@ -105,41 +105,45 @@ void videoStream:: showContextMenu(const QPoint& pos) {
 
        connect(newTab->rtpCli, SIGNAL(signal_ffmpeg_debug(QString, rtpClient*)), this, SLOT(slot_ffmpeg_debug(QString, rtpClient*)));
        connect(newTab, SIGNAL(signal_stream_ui_del(stream_ui*)), this, SLOT(slot_tab_del(stream_ui*)));
-
+       ui->mdiArea->tileSubWindows();
        qDebug() << "Created new tab with stream_ui object at address: " << newTab;
 }
  void videoStream::slot_tab_del(stream_ui* delIndex)
  {
 
-     //delIndex->rtpCli->finishFfmpeg();
      // Ensure the corresponding QTextEdit is deleted
      if (map_stream_ui.contains(delIndex)) {
          QWidget* del_widget = map_stream_ui[delIndex];
          del_widget->layout()->deleteLater();
-         map_stream_ui[delIndex]->deleteLater();  // Delay the deletion of QTextEdit
-         map_stream_ui.remove(delIndex);  // Remove from map
+         map_stream_ui[delIndex]->deleteLater();
+         map_stream_ui.remove(delIndex);
      }
      if (map_textedit.contains(delIndex->rtpCli)) {
-         map_textedit[delIndex->rtpCli]->deleteLater();  // Delay the deletion of the debug QTextEdit
-         map_textedit.remove(delIndex->rtpCli);  // Remove from map
+         map_textedit[delIndex->rtpCli]->deleteLater();
+         map_textedit.remove(delIndex->rtpCli);
      }
+
+     // Attempt to find and remove the corresponding subwindow
      QMdiSubWindow* targetSubWindow = nullptr;
      for (QMdiSubWindow* subWindow : ui->mdiArea->subWindowList()) {
-         if (subWindow->widget() == delIndex) { // 위젯 주소 비교
+         if (subWindow->widget() == delIndex) {
              targetSubWindow = subWindow;
              break;
          }
      }
 
-     // 찾은 경우에만 삭제
      if (targetSubWindow) {
          ui->mdiArea->removeSubWindow(targetSubWindow);
          targetSubWindow->deleteLater();
      } else {
-         qDebug() << "Error: delIndex not found in QMdiArea.";
+         qDebug() << "Error: delIndex not found in QMdiArea. delIndex:" << delIndex;
+         for (QMdiSubWindow* subWindow : ui->mdiArea->subWindowList()) {
+             qDebug() << "SubWindow Widget:" << subWindow->widget();
+         }
      }
-     // Optionally remove the stream_ui object from the UI
-    delIndex->deleteLater();
+
+     // Delete delIndex object
+     delIndex->deleteLater();
  }
 
  void videoStream:: addRegistedCam() {
@@ -196,8 +200,8 @@ void videoStream:: showContextMenu(const QPoint& pos) {
 
        connect(newTab->rtpCli, SIGNAL(signal_ffmpeg_debug(QString, rtpClient*)), this, SLOT(slot_ffmpeg_debug(QString, rtpClient*)));
        connect(newTab, SIGNAL(signal_stream_ui_del(stream_ui*)), this, SLOT(slot_tab_del(stream_ui*)));
-       //connect(newTab, SIGNAL(signal_stream_ui_del(stream_ui*)), this, SLOT(deletSubWind(stream_ui*)));
-
+       connect(newTab, SIGNAL(signal_stream_ui_del(stream_ui*)), this, SLOT(deletSubWind(stream_ui*)));
+        ui->mdiArea->tileSubWindows();
        qDebug() << "Created new tab with stream_ui object at address: " << newTab;
        connect(this,SIGNAL(start_stream()),newTab,SLOT(on_startBtn_clicked()));
        emit start_stream();
