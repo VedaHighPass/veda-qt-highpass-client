@@ -46,7 +46,7 @@ void stream_ui::on_startBtn_clicked()
     connect(rtpCli,SIGNAL(signal_video_start()),this,SLOT(slot_video_start()));
     connect(rtpCli,SIGNAL(signal_stream_fail()),this,SLOT(slot_streaming_fail()));
     //connect(this,SIGNAL(signal_clikQuit()),rtpCli,SLOT(slot_quitBtn()));
-    httpClient->addCamera(ui->lineEdit_9->text(),ui->lineEdit->text());
+    //httpClient->addCamera(ui->lineEdit_9->text(),ui->lineEdit->text());
     if(url.isEmpty())
         url = ui->lineEdit->text();
     //emit send_url(url);

@@ -15,11 +15,12 @@ rtpClient::rtpClient() {
 }
 rtpClient::~rtpClient()
 {
+
    qDebug() <<"!!!!~rtpCLient()!!!!!";
    if (ffmpegProcess) {
        if (ffmpegProcess->state() != QProcess::NotRunning) {
            qDebug() << "Waiting for FFmpeg to finish...";
-           finishFfmpeg(); // ì•ˆì „í•œ ì¢…ë£Œ í˜¸ì¶œ
+           finishFfmpeg(); // ?•ˆ? „?•œ ì¢…ë£Œ ?˜¸ì¶?
        }
        delete ffmpegProcess;
    }
@@ -27,43 +28,47 @@ rtpClient::~rtpClient()
 }
 
 void rtpClient::readFFmpegOutput() {
+    if (ffmpegProcess->state() == QProcess::Running) {
+        qDebug() << "FFmpeg process is not running.";
+    }
+
     QByteArray data = ffmpegProcess->readAllStandardOutput();
     // qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
     if (data.isEmpty()) {
-        qDebug() << "No data from ffmpeg. Check the process and arguments.";
+      //  qDebug() << "No data from ffmpeg. Check the process and arguments.";
     }
-    // ë°ì´í„°ì˜ í¬ê¸° í™•ì¸
+    // ?°?´?„°?˜ ?¬ê¸? ?™•?¸
    // qDebug() << "Received data size:" << data.size();
     buffer->append(data);
   //  qDebug() << "Received buffer size:" << buffer.size();
-    // raw RGB ë°ì´í„°ë¡œ ê°€ì •í•˜ê³  QImageë¡œ ë³€í™˜
-    if (buffer->size() >= 640 * 480 * 3) {  // í•´ìƒë„ 640x480ì— ëŒ€í•´ RGBëŠ” 3ë°”ì´íŠ¸ í”½ì…€
+    // raw RGB ?°?´?„°ë¡? ê°?? •?•˜ê³? QImageë¡? ë³??™˜
+    if (buffer->size() >= 640 * 480 * 3) {  // ?•´?ƒ?„ 640x480?— ????•´ RGB?Š” 3ë°”ì´?Š¸ ?”½???
          QByteArray frameData = buffer->left(640 * 480 * 3);
           buffer->remove(0, 640 * 480 * 3);
         // qDebug() << "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!";
 
         QImage image(reinterpret_cast<const uchar*>(frameData.data()), 640, 480, QImage::Format_RGB888);
 
-        // QLabelì˜ í¬ê¸°
+        // QLabel?˜ ?¬ê¸?
         QSize labelSize = videoLabel->size();
 
-        // ì´ë¯¸ì§€ì˜ í¬ê¸°
+        // ?´ë¯¸ì???˜ ?¬ê¸?
         QSize imageSize = image.size();
-        // ì´ë¯¸ì§€ì™€ QLabelì˜ ì¢…íš¡ë¹„ ë¹„êµ
+        // ?´ë¯¸ì????? QLabel?˜ ì¢…íš¡ë¹? ë¹„êµ
         QRect targetRect;
         if (static_cast<float>(imageSize.width()) / imageSize.height() > static_cast<float>(labelSize.width()) / labelSize.height()) {
-            // ì´ë¯¸ì§€ê°€ ê°€ë¡œë¡œ ë” ê¸¸ë©´ ì¢Œìš°ë¥¼ ì˜ë¼ëƒ„
+            // ?´ë¯¸ì??ê°? ê°?ë¡œë¡œ ?” ê¸¸ë©´ ì¢Œìš°ë¥? ?˜?¼?ƒ„
             int newWidth = static_cast<int>(imageSize.height() * static_cast<float>(labelSize.width()) / labelSize.height());
             int xOffset = (imageSize.width() - newWidth) / 2;
             targetRect = QRect(xOffset, 0, newWidth, imageSize.height());
         } else {
-            // ì´ë¯¸ì§€ê°€ ì„¸ë¡œë¡œ ë” ê¸¸ë©´ ìœ„ì•„ë˜ë¥¼ ì˜ë¼ëƒ„
+            // ?´ë¯¸ì??ê°? ?„¸ë¡œë¡œ ?” ê¸¸ë©´ ?œ„?•„?˜ë¥? ?˜?¼?ƒ„
             int newHeight = static_cast<int>(imageSize.width() * static_cast<float>(labelSize.height()) / labelSize.width());
             int yOffset = (imageSize.height() - newHeight) / 2;
             targetRect = QRect(0, yOffset, imageSize.width(), newHeight);
         }
 
-        // ì´ë¯¸ì§€ë¥¼ ì˜ë¼ëƒ„
+        // ?´ë¯¸ì??ë¥? ?˜?¼?ƒ„
         QImage croppedImage = image.copy(targetRect);
         QPixmap pixmap =  QPixmap::fromImage(croppedImage).scaled(labelSize, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
         emit signal_video_start();
@@ -82,13 +87,15 @@ void rtpClient::readFFmpegOutput() {
 
 void rtpClient::startFFmpegProcess(QString url) {
     ffmpegProcess = new QProcess();
-//    #if 1 // windowí™˜ê²½
-//    // FFmpeg ì‹¤í–‰ ê²½ë¡œ ë° ëª…ë ¹ì–´ ì„¤ì •
+//    #if 1 // window?™˜ê²?
+//    // FFmpeg ?‹¤?–‰ ê²½ë¡œ ë°? ëª…ë ¹?–´ ?„¤? •
 //    QString program = QDir::currentPath() + "/bin/ffmpeg.exe";
 //    qDebug() << program;
 //    QStringList arguments;
-//    #else // linuxí™˜ê²½
+//    #else // linux?™˜ê²?
     QString program = "/usr/bin/ffmpeg";
+    //QString program = QDir::currentPath() + "/bin/ffmpeg.exe";
+
     qDebug() << program;
     QStringList arguments;
     //#endif
@@ -96,17 +103,18 @@ void rtpClient::startFFmpegProcess(QString url) {
     arguments << "-protocol_whitelist" << "file,tcp,udp,rtp,rtsp"
               << "-i" << url // "rtsp://192.168.1.15:8554"
               << "-s" << "640x480"
-              << "-pix_fmt" << "rgb24"  // í”½ì…€ í¬ë§·ì„ raw RGBë¡œ ì„¤ì •
-//              << "-b:v" << "40K"        // ë¹„ë””ì˜¤ ë¹„íŠ¸ë ˆì´íŠ¸ ì„¤ì • (2Mbps)
-//              << "-maxrate" << "40K"    // ìµœëŒ€ ë¹„íŠ¸ë ˆì´íŠ¸ ì„¤ì •
-//              << "-bufsize" << "4M"    // ë²„í¼ í¬ê¸° ì„¤ì • (4Mbps)
-              << "-f" << "rawvideo"    // ì¶œë ¥ì„ raw ë¹„ë””ì˜¤ë¡œ ì„¤ì •
-              << "-loglevel" << "debug"
-              << "-";                  // stdoutìœ¼ë¡œ ì¶œë ¥
+              << "-pix_fmt" << "rgb24"  // ?”½??? ?¬ë§·ì„ raw RGBë¡? ?„¤? •
+            //  <<"-threads"<<"1"
+//              << "-b:v" << "40K"        // ë¹„ë””?˜¤ ë¹„íŠ¸? ˆ?´?Š¸ ?„¤? • (2Mbps)
+//              << "-maxrate" << "40K"    // ìµœë?? ë¹„íŠ¸? ˆ?´?Š¸ ?„¤? •
+//?…‹              << "-bufsize" << "4M"    // ë²„í¼ ?¬ê¸? ?„¤? • (4Mbps)
+              << "-f" << "rawvideo"    // ì¶œë ¥?„ raw ë¹„ë””?˜¤ë¡? ?„¤? •
+           //   << "-loglevel" << "debug"
+              << "-";                  // stdout?œ¼ë¡? ì¶œë ¥
 
-    //  FFmpeg ì‹¤í–‰
+    //  FFmpeg ?‹¤?–‰
     ffmpegProcess->start(program, arguments);
-    // ì—ëŸ¬ ì²˜ë¦¬ ì‹ í˜¸ ì—°ê²°
+    // ?—?Ÿ¬ ì²˜ë¦¬ ?‹ ?˜¸ ?—°ê²?
     connect(ffmpegProcess, &QProcess::readyReadStandardError, this, [this]() {
         QByteArray errorOutput = ffmpegProcess->readAllStandardError();
         if (!errorOutput.isEmpty()) {
@@ -116,24 +124,25 @@ void rtpClient::startFFmpegProcess(QString url) {
                 emit signal_ffmpeg_debug("FFmpeg error output:"+errorOutput,this);
             }
             emit signal_ffmpeg_debug("FFmpeg error output:"+errorOutput,this);
-            qDebug()<<"ffmepg debug : "<<errorOutput;
+            //qDebug()<<"ffmepg debug : "<<errorOutput;
         }
     });
 
     if (!ffmpegProcess->waitForStarted()) {
-        qDebug() << "FFmpeg ì‹¤í–‰ ì‹¤íŒ¨: " << ffmpegProcess->errorString();
+        qDebug() << "FFmpeg ?‹¤?–‰ ?‹¤?Œ¨: " << ffmpegProcess->errorString();
     } else {
-        qDebug() << "FFmpeg ìŠ¤íŠ¸ë¦¬ë° ì‹œì‘ ì¤‘...";
+        qDebug() << "FFmpeg ?Š¤?Š¸ë¦¬ë° ?‹œ?‘ ì¤?...";
         emit signal_streaming_start();
         QObject::connect(ffmpegProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readFFmpegOutput()));
     }
+
 }
 void rtpClient::finishFfmpeg()
 {
     if(ffmpegProcess)
-    {
+    {qDebug()<<"finishFFmpge";
         ffmpegProcess->terminate();
-        if(!ffmpegProcess->waitForFinished(3000))
+        if(!ffmpegProcess->waitForFinished(5000))
         {
             ffmpegProcess->kill();
         }
