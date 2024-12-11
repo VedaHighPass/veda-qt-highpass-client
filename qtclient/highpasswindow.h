@@ -28,6 +28,8 @@ private slots:
 
     void on_cctv_Button_clicked();
 
+    void on_register_Button_clicked();
+
 private:
     Ui::highPassWindow *ui;
     DataList *dataList; // DataList 객체 선언

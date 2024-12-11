@@ -1,4 +1,5 @@
 #include "highpasswindow.h"
+#include "registeremail.h"
 #include "ui_highpasswindow.h"
 #include "datalist.h" // dataList 포함
 #include "databasemanager.h"
@@ -36,10 +37,11 @@ highPassWindow::highPassWindow(QWidget *parent)
     QList<QWidget*> widgets = {
         ui->top_background,
         ui->mid_background,
-        ui->Charge_Button,
+        //ui->mail_Button_2,
         ui->mail_Button,
         ui->register_Button,
-        ui->tableView
+        ui->tableView,
+        ui->cctv_Button
     };
 
     for (QWidget* widget : widgets) {
@@ -345,5 +347,33 @@ void highPassWindow::on_cctv_Button_clicked()
     ui_videostream->show();
     ui_videostream->raise();
     ui_videostream->activateWindow();
+}
+
+
+void highPassWindow::on_register_Button_clicked()
+{
+    RegisterEmail *registerEmailWidget = new RegisterEmail(this);
+    registerEmailWidget->setWindowFlags(Qt::Window);
+    registerEmailWidget->setAttribute(Qt::WA_DeleteOnClose);
+
+    // RegisterEmail과 DatabaseManager 연결
+    connect(registerEmailWidget, &RegisterEmail::sendEmailData,
+            dbManager, &DatabaseManager::handleEmailData);
+
+    // DatabaseManager의 응답 처리
+    connect(dbManager, &DatabaseManager::emailRegistrationFinished,
+            registerEmailWidget, [](const QJsonObject &response) {
+                QMessageBox::information(nullptr, "Success", "Email registration completed successfully.");
+                qDebug() << "Server response:" << response;
+            });
+    connect(dbManager, &DatabaseManager::emailRegistrationError,
+            registerEmailWidget, [](const QString &error) {
+                QMessageBox::critical(nullptr, "Error", "Failed to register email: " + error);
+                qDebug() << "Error:" << error;
+            });
+
+    registerEmailWidget->show();
+    registerEmailWidget->raise();
+    registerEmailWidget->activateWindow();
 }
 

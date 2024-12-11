@@ -10,6 +10,7 @@
 #include <QEventLoop>
 #include <QTimer>
 #include <QVariant>
+#include <QList>
 
 DatabaseManager::DatabaseManager(QObject *parent)
     : QObject(parent), networkManager(new QNetworkAccessManager(this)) {
@@ -24,7 +25,7 @@ bool DatabaseManager::setServerUrl(const QString &ipAddress) {
         return false;
     }
 
-    serverUrl = QString("http://%1:8080/").arg(ipAddress.trimmed());
+    serverUrl = QString("https://%1:8080/").arg(ipAddress.trimmed());
     qDebug() << "Updated server URL:" << serverUrl;
 
     return true;
@@ -34,7 +35,14 @@ void DatabaseManager::fetchData(const QString &url) {
     QNetworkRequest request;
     request.setUrl(QUrl(url)); // URL 설정
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    // SSL 오류 무시 (개발용)
+    connect(networkManager, &QNetworkAccessManager::sslErrors, this, [](QNetworkReply *reply, const QList<QSslError> &errors) {
+        Q_UNUSED(errors);
+        reply->ignoreSslErrors();
+    });
     //networkManager->get(request); // GET 요청
+
     QNetworkReply* reply = networkManager->get(request); // GET 요청
     requestMap[reply] = url; // 요청과 URL 매핑
     qDebug() << "fetch Data";
@@ -43,6 +51,7 @@ void DatabaseManager::fetchData(const QString &url) {
 void DatabaseManager::fetchGateFees() {
     QString url = serverUrl + "gatefees";
     QUrl qUrl(url);
+    qDebug() << "123:";
 
     if (!qUrl.isValid()) {  // URL 유효성 검사
         qDebug() << "Invalid URL:" << qUrl;
@@ -108,8 +117,13 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
 }
 
 QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
-    QList<QVariant> row(DataList::COL_COUNT, QVariant()); // 열 개수만큼 초기화
-
+    //QList<QVariant> row(DataList::COL_COUNT, QVariant()); // 열 개수만큼 초기화
+    qDebug() << "test001";
+    QList<QVariant> row; // 열 개수만큼 초기화
+//    QList<QVariant> row;
+    for (int i = 0; i < DataList::COL_COUNT; ++i) {
+        row.append(QVariant());
+    }
     /// Path 처리
     int totalFee = 0; // 총 요금 초기화
     if (obj.contains("Path")) {
@@ -144,14 +158,9 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
 
     // PlateNumber 가져오기
     QString plateNumber = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
-    // 이미지 경로 생성
-    QString entryImagePath = QString("%1images/%2/entry.jpg").arg(serverUrl).arg(plateNumber);
 
     // 열 상수에 따라 데이터 추가
     row[DataList::COL_CHECKBOX] = QVariant(); // CheckBox는 비워둠
-
-    // JSON 키 매핑 및 기본값 처리
-    row[DataList::COL_PHOTO] = entryImagePath;
 
     row[DataList::COL_EMAIL] = obj.contains("Email") && !obj["Email"].toString().isEmpty()
                                    ? obj["Email"].toString()
@@ -185,6 +194,13 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
                                       ? exitTime.toString("yyyy-MM-dd HH:mm")
                                       : "-";
 
+
+    QString formattedTime = entryTime.toString("yyyyMMdd_HHmmss");
+    // 이미지 경로 생성
+    QString entryImagePath = QString("%1images/%2/%3.jpg").arg(serverUrl).arg(plateNumber).arg(formattedTime);
+    // JSON 키 매핑 및 기본값 처리
+    row[DataList::COL_PHOTO] = entryImagePath;
+
     return row;
 }
 
@@ -208,4 +224,32 @@ void DatabaseManager::parseGateFees(const QByteArray &data) {
 
 QString DatabaseManager::getServerUrl() const {
     return serverUrl;
+}
+
+void DatabaseManager::handleEmailData(const QJsonObject &json) {
+    if (serverUrl.isEmpty()) {
+        emit emailRegistrationError("Server URL is not set.");
+        return;
+    }
+
+    // URL 설정
+    QString url = serverUrl + "emails";
+    QUrl qUrl(url);
+    QNetworkRequest request(qUrl);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    // JSON 직렬화 및 POST 요청
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+
+    QNetworkReply *reply = networkManager->post(request, jsonData);
+    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+        if (reply->error() == QNetworkReply::NoError) {
+            QJsonDocument responseDoc = QJsonDocument::fromJson(reply->readAll());
+            emit emailRegistrationFinished(responseDoc.object()); // 성공 시 응답 전달
+        } else {
+            emit emailRegistrationError(reply->errorString()); // 에러 시 에러 메시지 전달
+        }
+        reply->deleteLater();
+    });
 }
