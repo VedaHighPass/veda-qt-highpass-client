@@ -24,7 +24,7 @@ bool DatabaseManager::setServerUrl(const QString &ipAddress) {
         return false;
     }
 
-    serverUrl = QString("http://%1:8080/").arg(ipAddress.trimmed());
+    serverUrl = QString("https://%1:8080/").arg(ipAddress.trimmed());
     qDebug() << "Updated server URL:" << serverUrl;
 
     return true;
@@ -208,4 +208,32 @@ void DatabaseManager::parseGateFees(const QByteArray &data) {
 
 QString DatabaseManager::getServerUrl() const {
     return serverUrl;
+}
+
+void DatabaseManager::handleEmailData(const QJsonObject &json) {
+    if (serverUrl.isEmpty()) {
+        emit emailRegistrationError("Server URL is not set.");
+        return;
+    }
+
+    // URL 설정
+    QString url = serverUrl + "emails";
+    QUrl qUrl(url);
+    QNetworkRequest request(qUrl);
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    // JSON 직렬화 및 POST 요청
+    QJsonDocument jsonDoc(json);
+    QByteArray jsonData = jsonDoc.toJson();
+
+    QNetworkReply *reply = networkManager->post(request, jsonData);
+    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+        if (reply->error() == QNetworkReply::NoError) {
+            QJsonDocument responseDoc = QJsonDocument::fromJson(reply->readAll());
+            emit emailRegistrationFinished(responseDoc.object()); // 성공 시 응답 전달
+        } else {
+            emit emailRegistrationError(reply->errorString()); // 에러 시 에러 메시지 전달
+        }
+        reply->deleteLater();
+    });
 }

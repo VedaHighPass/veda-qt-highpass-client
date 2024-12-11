@@ -39,9 +39,13 @@ public:
 signals:
     void dataReady(const QList<QList<QVariant>> &data);
     void updatePageNavigation(int totalRecords);
+    void emailRegistrationFinished(const QJsonObject &response); // 성공 시그널
+    void emailRegistrationError(const QString &error);          // 에러 시그널
 
 public slots:
     bool setServerUrl(const QString &ipAddress);
+    void handleEmailData(const QJsonObject &json); // JSON 데이터를 처리하는 슬롯
+
 private slots:
     void handleNetworkReply(QNetworkReply *reply);
 

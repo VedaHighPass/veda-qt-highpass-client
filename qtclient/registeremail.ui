@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>RegisterEmail</class>
+ <widget class="QWidget" name="RegisterEmail">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget {
+    background-color: rgb(237, 238, 246); 
+}
+</string>
+  </property>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>228</y>
+     <width>351</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton {
+	border-radius: 20px;
+	width : 130px;
+	height: 40px;
+	background-color: rgb(35, 76, 159); 
+	color: white;
+	font-weight: bold;	font-size: 15px;
+}
+QPushButton:pressed {
+	border: 1px solid rgb(244, 244, 244);
+	background-color: #222222;
+}
+
+QPushButton:hover {
+    background-color: rgb(20, 44, 91);
+	color : rgb(255,255,255);
+}</string>
+   </property>
+   <property name="text">
+    <string>REGISTER</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="line_platenum">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>126</y>
+     <width>211</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLineEdit {
+    padding: 1px;
+    padding-left: 10px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 1px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="line_email">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>175</y>
+     <width>211</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLineEdit {
+    padding: 1px;
+    padding-left: 10px; /* 텍스트를 오른쪽으로 10px 이동 */
+    border-style: solid;
+    border: 1px solid gray;
+	background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    min-width: 100px;
+    min-height: 20px;
+
+}</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>50</x>
+     <y>175</y>
+     <width>62</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>-1</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	font-weight: bold;	
+	font-size: 15px;
+}</string>
+   </property>
+   <property name="text">
+    <string>EMAIL</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_2">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>126</y>
+     <width>101</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel {
+	font-weight: bold;	
+	font-size: 15px;
+}</string>
+   </property>
+   <property name="text">
+    <string>PLATE NUM</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>256</x>
+     <y>25</y>
+     <width>81</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(255, 255, 255);
+</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap resource="resources.qrc">:/images/images/mail_register.png</pixmap>
+   </property>
+   <property name="scaledContents">
+    <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>53</x>
+     <y>34</y>
+     <width>191</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>맑은 고딕</family>
+     <pointsize>15</pointsize>
+     <italic>false</italic>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color : rgb(35, 76, 159); 
+background-color: rgb(255, 255, 255);
+
+</string>
+   </property>
+   <property name="text">
+    <string>REGISTER MAIL</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="top_background">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>10</y>
+     <width>351</width>
+     <height>90</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">border-radius: 45px;
+background-color: rgb(255, 255, 255);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <zorder>top_background</zorder>
+  <zorder>pushButton</zorder>
+  <zorder>line_platenum</zorder>
+  <zorder>line_email</zorder>
+  <zorder>label</zorder>
+  <zorder>label_2</zorder>
+  <zorder>label_3</zorder>
+  <zorder>label_4</zorder>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

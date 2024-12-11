@@ -24,6 +24,7 @@ SOURCES += \
     httpclient.cpp \
     main.cpp \
     mainwindow.cpp \
+    registeremail.cpp \
     rtpclient.cpp \
     sendemail.cpp \
     stream_ui.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     highpasswindow.h \
     httpclient.h \
     mainwindow.h \
+    registeremail.h \
     rtpclient.h \
     sendemail.h \
     stream_ui.h \
@@ -44,6 +46,7 @@ HEADERS += \
 FORMS += \
     highpasswindow.ui \
     mainwindow.ui \
+    registeremail.ui \
     sendemail.ui \
     stream_ui.ui \
     videostream.ui
