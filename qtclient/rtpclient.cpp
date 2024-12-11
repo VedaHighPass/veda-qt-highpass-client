@@ -87,18 +87,18 @@ void rtpClient::readFFmpegOutput() {
 
 void rtpClient::startFFmpegProcess(QString url) {
     ffmpegProcess = new QProcess();
-//    #if 1 // window?™˜ê²?
-//    // FFmpeg ?‹¤?–‰ ê²½ë¡œ ë°? ëª…ë ¹?–´ ?„¤? •
-//    QString program = QDir::currentPath() + "/bin/ffmpeg.exe";
-//    qDebug() << program;
-//    QStringList arguments;
-//    #else // linux?™˜ê²?
-    //QString program = "/usr/bin/ffmpeg";
+    #if _WIN32 // window?™˜ê²?
+    // FFmpeg ?‹¤?–‰ ê²½ë¡œ ë°? ëª…ë ¹?–´ ?„¤? •
     QString program = QDir::currentPath() + "/bin/ffmpeg.exe";
-
     qDebug() << program;
     QStringList arguments;
-    //#endif
+    #else // linux?™˜ê²?
+    QString program = "/usr/bin/ffmpeg";
+    qDebug() << program;
+    QStringList arguments;
+    #endif
+
+
 
     arguments << "-protocol_whitelist" << "file,tcp,udp,rtp,rtsp"
               << "-i" << url // "rtsp://192.168.1.15:8554"
