@@ -119,7 +119,8 @@ void DataList::populateData(const QList<QList<QVariant>> &data) {
                 QNetworkRequest request;
                 request.setUrl(QUrl(imageUrl)); // URL 설정
                 request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-                    // SSL 오류 무시 (개발용)
+
+                // SSL 오류 무시 (개발용)
                 connect(networkManager, &QNetworkAccessManager::sslErrors, this, [](QNetworkReply *reply, const QList<QSslError> &errors) {
                     Q_UNUSED(errors);
                     reply->ignoreSslErrors();

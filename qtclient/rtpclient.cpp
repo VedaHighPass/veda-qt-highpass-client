@@ -93,8 +93,8 @@ void rtpClient::startFFmpegProcess(QString url) {
 //    qDebug() << program;
 //    QStringList arguments;
 //    #else // linux?™˜ê²?
-    QString program = "/usr/bin/ffmpeg";
-    //QString program = QDir::currentPath() + "/bin/ffmpeg.exe";
+    //QString program = "/usr/bin/ffmpeg";
+    QString program = QDir::currentPath() + "/bin/ffmpeg.exe";
 
     qDebug() << program;
     QStringList arguments;
@@ -124,7 +124,7 @@ void rtpClient::startFFmpegProcess(QString url) {
                 emit signal_ffmpeg_debug("FFmpeg error output:"+errorOutput,this);
             }
             emit signal_ffmpeg_debug("FFmpeg error output:"+errorOutput,this);
-            //qDebug()<<"ffmepg debug : "<<errorOutput;
+            qDebug()<<"ffmepg debug : "<<errorOutput;
         }
     });
 
