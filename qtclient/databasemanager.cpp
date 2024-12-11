@@ -157,14 +157,9 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
 
     // PlateNumber 가져오기
     QString plateNumber = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
-    // 이미지 경로 생성
-    QString entryImagePath = QString("%1images/%2/entry.jpg").arg(serverUrl).arg(plateNumber);
 
     // 열 상수에 따라 데이터 추가
     row[DataList::COL_CHECKBOX] = QVariant(); // CheckBox는 비워둠
-
-    // JSON 키 매핑 및 기본값 처리
-    row[DataList::COL_PHOTO] = entryImagePath;
 
     row[DataList::COL_EMAIL] = obj.contains("Email") && !obj["Email"].toString().isEmpty()
                                    ? obj["Email"].toString()
@@ -197,6 +192,13 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     row[DataList::COL_END_DATE] = exitTime.isValid()
                                       ? exitTime.toString("yyyy-MM-dd HH:mm")
                                       : "-";
+
+
+    QString formattedTime = entryTime.toString("yyyyMMdd_HHmmss");
+    // 이미지 경로 생성
+    QString entryImagePath = QString("%1images/%2/%3.jpg").arg(serverUrl).arg(plateNumber).arg(formattedTime);
+    // JSON 키 매핑 및 기본값 처리
+    row[DataList::COL_PHOTO] = entryImagePath;
 
     return row;
 }

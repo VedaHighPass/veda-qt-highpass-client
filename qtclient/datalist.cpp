@@ -118,7 +118,14 @@ void DataList::populateData(const QList<QList<QVariant>> &data) {
                 // HTTP GET 요청으로 이미지 다운로드
                 QNetworkRequest request;
                 request.setUrl(QUrl(imageUrl)); // URL 설정
+                request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+                    // SSL 오류 무시 (개발용)
+                connect(networkManager, &QNetworkAccessManager::sslErrors, this, [](QNetworkReply *reply, const QList<QSslError> &errors) {
+                    Q_UNUSED(errors);
+                    reply->ignoreSslErrors();
+                });
                 QNetworkReply* reply = networkManager->get(request); // GET 요청
+
 
                 // Reply에 행/열 정보를 저장 (이미지 다운로드 후 테이블에 반영하기 위해)
                 reply->setProperty("row", gridmodel->rowCount());
