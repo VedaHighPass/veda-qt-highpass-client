@@ -98,6 +98,7 @@ QPushButton:pressed {
     <property name="font">
      <font>
       <family>맑은 고딕</family>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -167,6 +168,7 @@ QPushButton:hover {
     <property name="font">
      <font>
       <pointsize>10</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -189,6 +191,7 @@ QPushButton:hover {
     <property name="font">
      <font>
       <pointsize>10</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -212,6 +215,7 @@ QPushButton:hover {
      <font>
       <family>맑은 고딕</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -253,6 +257,7 @@ QPushButton:hover {
     <property name="font">
      <font>
       <family>맑은 고딕</family>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -457,13 +462,13 @@ QHeaderView::section:horizontal
 */</string>
     </property>
     <property name="editTriggers">
-     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+     <set>QAbstractItemView::NoEditTriggers</set>
     </property>
     <property name="alternatingRowColors">
      <bool>true</bool>
     </property>
     <property name="selectionMode">
-     <enum>QAbstractItemView::SelectionMode::NoSelection</enum>
+     <enum>QAbstractItemView::NoSelection</enum>
     </property>
     <property name="sortingEnabled">
      <bool>true</bool>
@@ -737,6 +742,7 @@ border-radius:10px;</string>
      <font>
       <family>맑은 고딕</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -830,16 +836,16 @@ border-radius:10px;</string>
     <property name="geometry">
      <rect>
       <x>650</x>
-      <y>-10</y>
+      <y>-1</y>
       <width>31</width>
-      <height>91</height>
+      <height>83</height>
      </rect>
     </property>
     <property name="lineWidth">
      <number>1</number>
     </property>
     <property name="orientation">
-     <enum>Qt::Orientation::Vertical</enum>
+     <enum>Qt::Vertical</enum>
     </property>
    </widget>
    <widget class="QPushButton" name="DB_Button">
@@ -922,6 +928,7 @@ QPushButton:pressed {
     <property name="font">
      <font>
       <family>맑은 고딕</family>
+      <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
@@ -988,7 +995,7 @@ QPushButton:hover {
      <x>0</x>
      <y>0</y>
      <width>1024</width>
-     <height>26</height>
+     <height>20</height>
     </rect>
    </property>
   </widget>

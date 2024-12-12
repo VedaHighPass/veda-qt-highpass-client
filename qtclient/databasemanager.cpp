@@ -160,7 +160,7 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     }
 
     // UnpaidFee에 총 요금 추가
-    row[DataList::COL_UNPAIDFEE] = QLocale(QLocale::English).toString(totalFee)  + "\\";
+    row[DataList::COL_UNPAIDFEE] = QLocale(QLocale::English).toString(totalFee)  + "₩";
 
     // PlateNumber 가져오기
     QString plateNumber = obj.contains("PlateNumber") ? obj["PlateNumber"].toString() : "Unknown";
