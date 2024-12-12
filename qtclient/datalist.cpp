@@ -63,7 +63,7 @@ void DataList::GridTableView() {
             index = gridmodel->index(row, col, QModelIndex());
             gridmodel->setData(index, "");
         }
-        tableView->setRowHeight(row, 120);
+        tableView->setRowHeight(row, 80);
     }
 
     // 열 너비 조정
@@ -142,7 +142,7 @@ void DataList::populateData(const QList<QList<QVariant>> &data) {
     }
 
     for (int row = 0; row < gridmodel->rowCount(); ++row) {
-        tableView->setRowHeight(row, 120);
+        tableView->setRowHeight(row, 80);
     }
     // 데이터 갱신 후 체크박스와 배경색 업데이트
     updateRowColors();

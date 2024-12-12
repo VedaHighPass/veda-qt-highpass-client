@@ -146,19 +146,35 @@ void rtpClient::startFFmpegProcess(QString url) {
     QStringList arguments;
     #endif
 
-    arguments << "-protocol_whitelist" << "file,tcp,udp,rtp,rtsp"
-            //<< "-hwaccel" << "cuda"                            // 하드웨어 가속 (CUDA)
+    /*arguments << "-protocol_whitelist" << "file,tcp,udp,rtp,rtsp"
+              << "-hwaccel" << "cuda"                            // 하드웨어 가속 (CUDA)
               << "-i" << url // "rtsp://192.168.1.15:8554"
               << "-s" << "640x480"
-              << "-vsync" << "vfr" // 비디오 동기화
-              << "-framerate" << "30" // 30fps로 제한
               << "-pix_fmt" << "rgb24"
-            //<<"-threads"<<"1"
+              << "-max_delay" << "500000"
+              << "-analyzeduration" << "10000000" // 분석 시간 증가
+              << "-probesize" << "10000000" // 스트림 프로브 크기 증가
+              << "-vsync" << "vfr"
               << "-b:v" << "2M"
               << "-maxrate" << "4M"
               << "-bufsize" << "4M"
               << "-f" << "rawvideo"
             //<< "-loglevel" << "debug"
+              << "-";                  // stdout
+    */
+    arguments << "-protocol_whitelist" << "file,tcp,udp,rtp,rtsp"
+              //<< "-hwaccel" << "cuda"                            // 하드웨어 가속 (CUDA)
+              << "-i" << url // "rtsp://192.168.1.15:8554"
+              << "-s" << "640x480"
+              << "-vsync" << "vfr" // 비디오 동기화
+              << "-framerate" << "30" // 30fps로 제한
+              << "-pix_fmt" << "rgb24"
+              //<<"-threads"<<"1"
+              << "-b:v" << "2M"
+              << "-maxrate" << "2M"
+              << "-bufsize" << "4M"
+              << "-f" << "rawvideo"
+              //<< "-loglevel" << "debug"
               << "-";                  // stdout
 
     //  FFmpeg
@@ -166,6 +182,7 @@ void rtpClient::startFFmpegProcess(QString url) {
 
     connect(ffmpegProcess, &QProcess::readyReadStandardError, this, [this]() {
         QByteArray errorOutput = ffmpegProcess->readAllStandardError();
+        //qDebug() << "----------------------------------";
         if (!errorOutput.isEmpty()) {
             if(errorOutput.contains("failed")||errorOutput.contains("No such file")||errorOutput.contains("not found")||errorOutput.contains("Invalid argument")||errorOutput.contains("Bad Request"))
             {
@@ -173,7 +190,7 @@ void rtpClient::startFFmpegProcess(QString url) {
                 emit signal_ffmpeg_debug("FFmpeg error output:"+errorOutput,this);
             }
             emit signal_ffmpeg_debug("FFmpeg error output:"+errorOutput,this);
-            qDebug()<<"ffmepg debug : "<<errorOutput;
+            //qDebug()<<"ffmepg debug : "<<errorOutput;
         }
     });
 

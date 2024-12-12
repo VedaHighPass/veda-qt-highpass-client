@@ -51,7 +51,7 @@ void DatabaseManager::fetchData(const QString &url) {
 void DatabaseManager::fetchGateFees() {
     QString url = serverUrl + "gatefees";
     QUrl qUrl(url);
-    qDebug() << "123:";
+    //qDebug() << "123:";
 
     if (!qUrl.isValid()) {  // URL 유효성 검사
         qDebug() << "Invalid URL:" << qUrl;
@@ -59,11 +59,17 @@ void DatabaseManager::fetchGateFees() {
     }
     QNetworkRequest request(qUrl);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    // SSL 오류 무시 (개발용)
+    connect(networkManager, &QNetworkAccessManager::sslErrors, this, [](QNetworkReply *reply, const QList<QSslError> &errors) {
+        Q_UNUSED(errors);
+        reply->ignoreSslErrors();
+    });
     networkManager->get(request);
     connect(networkManager, &QNetworkAccessManager::finished, this, &DatabaseManager::handleNetworkReply);
 }
 
 int DatabaseManager::getGateFee(int gateNumber) const {
+    //qDebug() << "gateFeeUpdate";
     return gateFeeMap.value(gateNumber, 0); // 기본값 0 반환
 }
 
@@ -79,7 +85,7 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
     QUrl requestUrl = reply->request().url();  // 요청 URL 확인
     reply->deleteLater();
 
-    reply->deleteLater();
+    qDebug() << requestUrl;
 
     // URL에 따라 처리 분기
     if (requestUrl.toString().contains("gatefees")) {
@@ -118,7 +124,6 @@ void DatabaseManager::handleNetworkReply(QNetworkReply *reply) {
 
 QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     //QList<QVariant> row(DataList::COL_COUNT, QVariant()); // 열 개수만큼 초기화
-    qDebug() << "test001";
     QList<QVariant> row; // 열 개수만큼 초기화
 //    QList<QVariant> row;
     for (int i = 0; i < DataList::COL_COUNT; ++i) {
@@ -129,13 +134,14 @@ QList<QVariant> DatabaseManager::extractRowData(const QJsonObject &obj) {
     if (obj.contains("Path")) {
         QString pathString = obj["Path"].toString(); // Path 값을 가져옴
         QStringList gateNumbers = pathString.split(",", Qt::SkipEmptyParts); // Path를 콤마로 분리
-
+        //qDebug() << gateNumbers;
         // 각 게이트 번호의 요금을 합산
         for (const QString &gateNumberStr : gateNumbers) {
             bool ok;
             int gateNumber = gateNumberStr.toInt(&ok); // 숫자로 변환
             if (ok && gateFeeMap.contains(gateNumber)) {
                 totalFee += gateFeeMap[gateNumber]; // 요금 추가
+                //qDebug() << totalFee;
             }
         }
 
@@ -246,8 +252,10 @@ void DatabaseManager::handleEmailData(const QJsonObject &json) {
     connect(reply, &QNetworkReply::finished, this, [this, reply]() {
         if (reply->error() == QNetworkReply::NoError) {
             QJsonDocument responseDoc = QJsonDocument::fromJson(reply->readAll());
+            qDebug() << "email register success.";
             emit emailRegistrationFinished(responseDoc.object()); // 성공 시 응답 전달
         } else {
+            qDebug() << "email register failed.";
             emit emailRegistrationError(reply->errorString()); // 에러 시 에러 메시지 전달
         }
         reply->deleteLater();
