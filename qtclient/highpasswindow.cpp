@@ -364,7 +364,19 @@ void highPassWindow::on_register_Button_clicked()
     connect(dbManager, &DatabaseManager::emailRegistrationFinished,
             registerEmailWidget, [](const QJsonObject &response) {
                 QMessageBox::information(nullptr, "Success", "Email registration completed successfully.");
-                qDebug() << "Server response:" << response;
+                try {
+                    // JSON 확인 및 출력
+                    if (!response.isEmpty()) {
+                        QString jsonString = QString(QJsonDocument(response).toJson(QJsonDocument::Indented));
+                        qDebug() << "Server response (JSON):" << jsonString;
+                    } else {
+                        qDebug() << "Response is not a valid JSON object or is empty.";
+                    }
+                } catch (const std::exception &e) {
+                    qDebug() << "Exception occurred while processing server response:" << e.what();
+                } catch (...) {
+                    qDebug() << "An unknown error occurred while processing server response.";
+                }
             });
     connect(dbManager, &DatabaseManager::emailRegistrationError,
             registerEmailWidget, [](const QString &error) {
