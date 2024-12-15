@@ -23,7 +23,7 @@ git clone https://github.com/VedaHighPass/veda-qt-highpass-client.git
 cd veda-qt-highpass-client/qtclient
 demo_vars.h 파일 작성
 아래 예시를 참고하여 demo_vars.h 파일 생성:
-```cpp
+
 #ifndef DEMO_VARS_H
 #define DEMO_VARS_H
 
@@ -37,18 +37,16 @@ demo_vars.h 파일 작성
 #define RECIPIENT_EMAIL "수신자 이메일"
 
 #endif
-```
+
 httpclient.cpp 수정
 HttpClient::loadCameras() 함수에서 서버 URL을 데이터베이스 서버 주소로 수정해야 합니다.
 예를 들어:
-```cpp
 QUrl url("https://192.168.0.26:8080/cameras");
-```
+
 위 URL을 현재 사용하는 데이터베이스 서버 주소로 변경하십시오.
 
 빌드 및 실행
-bash
-코드 복사
+
 # 서버 실행 후 클라이언트 실행
 cd veda-qt-highpass-client/qtclient
 qmake
